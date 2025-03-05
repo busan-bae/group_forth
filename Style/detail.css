@@ -1,0 +1,184 @@
+@font-face {
+  font-family: 'Pretendard-ExtraLight';
+  src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-ExtraLight.woff') format('woff');
+  font-weight: 200;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Pretendard-Regular';
+  src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Pretendard-Bold';
+  src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+}
+
+body{
+  font-family: 'Pretendard-Regular';
+}
+
+.container{
+  min-height: 100vh;
+}
+
+.contents{
+  padding: 1em;
+}
+
+.detail-top{
+  padding-bottom: 6.5rem;
+}
+
+.detail-top .product-name{
+  display: flex;
+  justify-content: space-between;
+  margin-top: 5em;
+  margin-bottom: 2.4rem;
+}
+
+.product-name #now-showing{
+  width: 100px;
+  align-self: flex-start;
+  padding: 0.4em;
+  border: 1px solid green;
+  border-radius: 20px;
+  background-color: green;
+  color: white;
+  text-align: center;
+}
+
+.product-name .product-name-wrap{
+  font-family: 'Pretendard-ExtraLight';
+  display: flex;
+  gap: 1em;
+}
+
+.product-name-wrap h2{
+  font-family: 'Pretendard-Bold';
+}
+
+.product-summary > div{
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+.product-image div{
+  position: relative;
+  max-width: 300px;
+}
+
+.product-image img{
+  max-width: 100%;
+}
+
+.product-image .like{
+  padding: 1em;
+  position: absolute;
+  bottom: -60px;
+  left: 250px
+}
+
+
+.product-info{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.product-info li{
+  list-style-type: none;
+  margin-bottom: 1em;
+}
+
+.book-wrap{
+  display: flex;
+  justify-content: center;
+  padding: 1.5em;
+}
+
+.book-wrap button{
+  flex-grow: 0.4;
+  padding: 0.8em;
+  border:#00A9FF;
+  border-radius: 10px;
+  color: white;
+  background-color: #00A9FF;
+}
+
+.detail-nav{
+  display: flex;
+  gap: 2em;
+  position: relative;
+  border-bottom: 1px solid lightgrey;
+}
+
+.detail-nav div{
+  padding: 1em;
+  cursor: pointer;
+}
+
+#underline{
+  height: 4px;
+  background-color: #00A9FF;
+  position: absolute;
+  width: 110px;
+  left: 0px;
+  top: 52px;
+  padding: 0;
+  transition: 0.5s;
+  border-radius: 5px;
+}
+
+.detail-contents{
+  padding-top: 6rem;
+}
+
+@media screen and (max-width: 768px) {
+  .book-wrap button{
+    flex-grow: 1;
+  }
+
+  .detail-nav{
+    gap: 0;
+    justify-content: center;
+    border: none;
+  }
+
+  .detail-nav div{
+    padding: 0.5em;
+    text-align: center;
+    border: 1px solid lightgray;
+    background-color: lightgray;
+    flex-grow: 1;
+  }
+
+  .detail-nav div:nth-child(2){
+    border-radius: 10px 0 0 10px;
+  }
+
+  .detail-nav div:last-child{
+    border-radius: 0 10px 10px 0;
+  }
+
+  #underline{
+    display: none;
+  }
+}
+
+@media screen and (max-width: 912px){
+  .product-image{
+    display: flex;
+    justify-content: center;
+  }
+    
+  .product-summary > div:first-child{
+    margin-top: 1em;
+    margin-bottom: 3em;
+  }
+}
