@@ -1,22 +1,4 @@
-<<<<<<< HEAD
-let newsList = [];
-const menus = document.querySelectorAll(".menus button");
-menus.forEach(menu => menu.addEventListener("click", (event) => getNewsByCategory(event)));
-const sideNav = document.querySelectorAll(".side-nav button");
-sideNav.forEach(menu => menu.addEventListener("click", (event) => getNewsByCategory(event)));
 
-document.addEventListener("DOMContentLoaded", function () {
-    const btnBar = document.querySelector(".btn-bar");
-    const gnb = document.querySelector(".gnb");
-    let isMenuOpen = false;
-
-    btnBar.addEventListener("click", function () {
-        isMenuOpen = !isMenuOpen;
-        gnb.classList.toggle("active", isMenuOpen);
-    });
-
-});
-=======
   /* 슬라이드 5개 보임 */
   const render = () => {
     let mainslHTML = "";
@@ -100,4 +82,3 @@ var mainCont1Swiper = new Swiper(".main-cont-area", {
   },
 });
 /* e : 메인 슬라이드 스와이퍼 */
->>>>>>> develop
