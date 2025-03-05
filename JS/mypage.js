@@ -34,8 +34,13 @@ pencilIcon.forEach((item, index) => {
   });
 });
 
-inputFile.addEventListener("change", (event) => {
-  console.log(event.target.value);
+// 프로필 사진 변경 이벤트
+inputFile.addEventListener("change", () => {
+  const fReader = new FileReader();
+  fReader.readAsDataURL(inputFile.files[0]);
+  fReader.onloadend = (event) => {
+    profileIMG.style.backgroundImage = `url(${event.target.result})`;
+  }
 });
 
 // 공통된 유효성 체크 항목
