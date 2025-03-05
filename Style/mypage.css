@@ -1,0 +1,93 @@
+@font-face {
+  font-family: 'Pretendard-Regular';
+  src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+}
+.my-header {
+  border: 3px solid red;
+  height: 50px;
+}
+
+.profile-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 2rem;
+}
+.profile-main {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: 5rem;
+}
+.profile-img {
+  border-radius: 100%;
+  width: 150px;
+  height: 150px;
+  margin-top: 1.5rem;
+  margin-right: 10rem;
+  background-image: url("https://static.vecteezy.com/system/resources/thumbnails/013/360/247/small/default-avatar-photo-icon-social-media-profile-sign-symbol-vector.jpg");
+  background-position: center;
+  position: relative;
+}
+.profile-img label {
+  display: block;
+  width: 35px;
+  height: 35px;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+}
+.camera-icon {
+  background-color: #fff;
+  width: 35px;
+  height: 35px;
+  border: 1px solid #00a9ff;
+  border-radius: 100%;
+  font-size: 22px;
+  color: #00a9ff;
+  padding-top: 5px;
+  padding-left: 3px;
+}
+.camera-icon:hover {
+  color: #fff;
+  background-color: #00a9ff;
+}
+.profile-info {
+  width: 330px;
+}
+.profile-info div {
+  margin-bottom: 1.2rem;
+  border-bottom: 1px solid lightgray;
+  padding-bottom: 0.5rem;
+  width: 300px;
+  font-weight: 700;
+  /* border: 1px solid red; */
+}
+.profile {
+  position: relative;
+}
+.profile-item {
+  outline: none;
+  margin-left: 1rem;
+  font-weight: 500;
+}
+.profile i {
+  position: absolute;
+  right: 5px;
+  bottom: 10px;
+  font-size: 1rem;
+  color: gray;
+  cursor: pointer;
+}
+.profile i:hover {
+  color: #00a9ff;
+}
+
+@media screen and (max-width:767px) {
+  .profile-img {
+    margin-bottom: 5rem;
+    margin-left: 9rem;
+  }
+}
