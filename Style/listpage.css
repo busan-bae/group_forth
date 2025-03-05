@@ -1,27 +1,46 @@
-.list-area { 
-    margin-top: 5em;
+.head-background {
+    width: 100vw;
+    background-color: #eaeaea;
+    text-align: center;
+    padding-top: 8em;
+    padding-bottom: 5em;
 }
 
-.head-line {
-    padding: 2em;
-    text-align: center;
+.main-filter-bar {
+    background-color: #F6F6F6;
 }
+
 .main-filter {
     display: flex;
     height: 2.5em;
     align-items: center;
-    justify-content: center;
     margin-bottom: 3em;
 }
 
+.icon-box {
+    background-color: #A6A6A6;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding-right: 4px;
+    padding-left: 4px;
+}
+
+
 .main-filter select {
-    padding-left: 5px;
-    margin-left: 5px;
+    width: 20%;
     height: 100%;
     font-size: 1em;
-    background-color: none;
+    background-color: #D5D5D5;
     border: none;
-    border-bottom: 1px solid #00A9FF;
+}
+
+.list-area { 
+    margin-top: 8em;
+}
+
+.date-filer {
+    background-color: #D5D5D5;
 }
 
 .item-size {
@@ -35,5 +54,5 @@
 
 .pagination {
     justify-content: center;
-    margin-top: 20px;
+    margin-top: 100px;
 }
