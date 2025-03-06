@@ -3,13 +3,17 @@ const profileInfo = document.querySelectorAll(".profile-info div");
 const pencilIcon = document.querySelectorAll(".profile i");
 const profileIMG = document.querySelector(".profile-img");
 const inputFile = document.getElementById("input-file");
-const myProfile = { // 프로필 객체
+const myProfile = {
+  // 프로필 객체
   name: "코알누",
   birth: "2006.03.09",
   phone: "010-1234-5678",
   email: "codingnoona@gmail.com",
 };
 let isEditable = [false, false, false, false]; // 각 항목별 편집 활성화 여부 체크용 배열
+
+// 프로필 이미지 주소값
+let imgRoot = "https://static.vecteezy.com/system/resources/thumbnails/013/360/247/small/default-avatar-photo-icon-social-media-profile-sign-symbol-vector.jpg";
 
 // 연필 버튼 클릭 이벤트
 pencilIcon.forEach((item, index) => {
@@ -23,8 +27,7 @@ pencilIcon.forEach((item, index) => {
       isEditable[index] = true;
     } else {
       // 편집 완료를 눌렀을 때
-      if (profileRender(index)) {
-        // 유효성 검사 후 렌더가 되고 true 를 반환받았을때
+      if (profileRender(index)) { // 유효성 검사 후 렌더가 되고 true 를 반환받았을때
         profileItem[index].contentEditable = "false";
         profileInfo[index].style.borderColor = "lightgray";
         item.style.color = "gray";
@@ -34,8 +37,14 @@ pencilIcon.forEach((item, index) => {
   });
 });
 
-inputFile.addEventListener("change", (event) => {
-  console.log(event.target.value);
+// 프로필 사진 변경 이벤트
+inputFile.addEventListener("change", () => {
+  const fReader = new FileReader();
+  fReader.readAsDataURL(inputFile.files[0]);
+  fReader.onloadend = (event) => {
+    profileIMG.style.backgroundImage = `url(${event.target.result})`;
+    imgRoot = event.target.result;
+  };
 });
 
 // 공통된 유효성 체크 항목
@@ -179,3 +188,5 @@ const profileRender = (index) => {
     return true;
   }
 };
+
+export default imgRoot;
