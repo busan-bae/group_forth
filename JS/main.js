@@ -1,238 +1,276 @@
-//임의 데이터터
-const performances = [
-  { id: 1, title: "공연1", eventSite: "공연장A", startDate: "2025-03-05", endDate: "2025-03-09" },
-  { id: 2, title: "공연2", eventSite: "공연장B", startDate: "2025-03-07", endDate: "2025-03-10" },
-  { id: 3, title: "공연3", eventSite: "공연장C", startDate: "2025-03-06", endDate: "2025-03-08" },
-  { id: 4, title: "공연4", eventSite: "공연장D", startDate: "2025-03-09", endDate: "2025-03-12" },
-  { id: 5, title: "공연5", eventSite: "공연장E", startDate: "2025-03-04", endDate: "2025-03-07" },
-  { id: 6, title: "공연6", eventSite: "공연장F", startDate: "2025-03-08", endDate: "2025-03-11" },
-  { id: 7, title: "공연7", eventSite: "공연장G", startDate: "2025-03-10", endDate: "2025-03-13" },
-  { id: 8, title: "공연8", eventSite: "공연장H", startDate: "2025-03-12", endDate: "2025-03-14" },
-  { id: 9, title: "공연9", eventSite: "공연장I", startDate: "2025-03-15", endDate: "2025-03-18" },
-  { id: 0, title: "공연0", eventSite: "공연장J", startDate: "2025-03-16", endDate: "2025-03-19" },
-];
+const proxy = "https://api.allorigins.win/raw?url=";
+const apiKey = "d98d9402f26042ed994300072acd892e";
+const baseURL = "https://www.kopis.or.kr/openApi/restful/";
 
-const filterPerformancesByDate = (selectedDate) => {
-  const filteredPerformances = performances.filter(performance => {
-    const startDate = new Date(performance.startDate);
-    const endDate = new Date(performance.endDate);
-    return selectedDate >= startDate && selectedDate <= endDate; 
-  });
+// 공연 데이터 목록
+let performances = [];
 
-  // 공연이 없으면 "공연이 없습니다" 메시지를 동적으로 추가
-  const mdateCont = document.querySelector(".mdate-cont"); // 공연 리스트가 담길 부모 요소
-  const noPerformanceMessage = mdateCont.querySelector(".no-maintxt");
-
-  // 공연이 없으면 메시지 추가
-  if (filteredPerformances.length === 0) {
-    if (!noPerformanceMessage) {  // 이미 메시지가 있으면 추가하지 않음
-      const messageElement = document.createElement("div");
-      messageElement.classList.add("no-maintxt");
-      messageElement.textContent = "공연이 없습니다.";
-      mdateCont.appendChild(messageElement); // 부모 요소에 메시지 추가
+// XML을 JSON으로 변환하는 함수
+const xmlToJson = (xml) => {
+    let obj = {};
+    if (xml.nodeType === 1) { // element 노드
+        if (xml.attributes.length > 0) {
+            obj["@attributes"] = {};
+            for (let i = 0; i < xml.attributes.length; i++) {
+                const attribute = xml.attributes.item(i);
+                obj["@attributes"][attribute.nodeName] = attribute.nodeValue;
+            }
+        }
+    } else if (xml.nodeType === 3) { // text 노드
+        obj = xml.nodeValue.trim();
     }
-  } else {
-    // 공연이 있으면 기존 메시지를 숨김
-    if (noPerformanceMessage) {
-      noPerformanceMessage.remove();
-    }
-  }
 
-  return filteredPerformances;
+    // 자식 노드 처리
+    if (xml.hasChildNodes()) {
+        for (let i = 0; i < xml.childNodes.length; i++) {
+            const item = xml.childNodes.item(i);
+            const nodeName = item.nodeName;
+            if (typeof obj[nodeName] === "undefined") {
+                obj[nodeName] = xmlToJson(item);
+            } else {
+                if (!Array.isArray(obj[nodeName])) {
+                    obj[nodeName] = [obj[nodeName]];
+                }
+                obj[nodeName].push(xmlToJson(item));
+            }
+        }
+    }
+
+    return obj;
 };
 
+// API 요청 함수
+const fetchKopisData = async (queryParams, containerClass) => {
+  try {
+      const apiURL = `${baseURL}${queryParams}&service=${apiKey}`;
+      const response = await fetch(proxy + encodeURIComponent(apiURL), { timeout: 10000 });
 
+      if (!response.ok) throw new Error(`HTTP 오류: ${response.status}`);
 
+      const xmlText = await response.text();
+      const xml = new DOMParser().parseFromString(xmlText, "application/xml");
+      const jsonData = xmlToJson(xml);
 
-// 공연 항목 표시 함수
-const togglePerformanceVisibility = (performanceItems, selectedDate) => {
-  performanceItems.forEach(item => {
-    const performanceDateText = item.querySelector(".date").textContent;
-    const performanceDates = performanceDateText.split(" ~ ");
-    const startDate = new Date(performanceDates[0]);
-    const endDate = new Date(performanceDates[1]);
+      console.log("API 요청 URL:", apiURL);
+      console.log("JSON 데이터:", jsonData);
 
-    if (selectedDate >= startDate && selectedDate <= endDate) {
-      item.style.display = "block";
-    } else {
-      item.style.display = "none";
-    }
-  });
-};
+      let performances = [];
 
-// 날짜 버튼 생성 및 이벤트 처리
-const addDate = () => {
-  const todayDate = new Date();
-  let currentDate = new Date();
-  let dateHTML = "";
+// 데이터 구조에 맞게 배열 추출
+if (jsonData.boxofs && jsonData.boxofs.boxof) {
+  // boxofs.boxof이 배열인지 확인하고, 배열로 처리
+  performances = Array.isArray(jsonData.boxofs.boxof) ? jsonData.boxofs.boxof : [jsonData.boxofs.boxof];
+} else if (jsonData.dbs && jsonData.dbs.db) {
+  // dbs.db이 배열인지 확인하고, 배열로 처리
+  performances = Array.isArray(jsonData.dbs.db) ? jsonData.dbs.db : [jsonData.dbs.db];
+} else {
+  console.error("데이터가 잘못되었습니다. boxofs.boxof 또는 dbs.db가 없습니다.");
+}
 
-  // 날짜 버튼 생성
-  for (let i = 0; i < 20; i++) {
-    currentDate.setDate(todayDate.getDate() + i);
+    console.log("JSON 데이터에서 추출된 performances:", performances);
+    render(performances, containerClass);
 
-    let dateStr = currentDate.toLocaleDateString('ko-KR', { day: '2-digit' });
-    let dateClass = i === 0 ? "mdate today" : "mdate";
+      console.log("JSON 데이터에서 추출된 performances:", performances);
+      render(performances, containerClass);
 
-    dateHTML += `
-      <button class="${dateClass} swiper-slide" data-index="${i}">
-        <p>${i === 0 ? "Today" : ""}</p>
-        <p>${dateStr}</p>
-      </button>
-    `;
+  } catch (error) {
+      console.error("API 요청 중 오류 발생:", error);
   }
-
-  document.querySelector(".main-date-bx").innerHTML = dateHTML;
-
-  // 날짜 버튼 클릭 시 active 클래스 추가/제거 및 공연 필터링
-  const dateButtons = document.querySelectorAll(".mdate");
-  const mdateCont = document.querySelector(".mdate-cont");
-  const performanceItems = mdateCont.querySelectorAll(".list-item-bx");
-
-  // 처음 로드 시 "Today"에 해당하는 공연만 보이게 하기
-  const todayButton = document.querySelector(".mdate.today");
-  if (todayButton) {
-    const todayDateText = todayButton.querySelector('p:nth-child(2)').textContent;
-    const selectedDate = new Date(todayDate.getFullYear(), todayDate.getMonth(), parseInt(todayDateText));
-
-    const filteredPerformances = filterPerformancesByDate(selectedDate);
-    togglePerformanceVisibility(performanceItems, selectedDate);
-  }
-
-  // 날짜 버튼 클릭 시
-  dateButtons.forEach(button => {
-    button.addEventListener("click", function() {
-      dateButtons.forEach(btn => btn.classList.remove("active"));
-      this.classList.add("active");
-
-      // 클릭된 날짜 가져오기
-      const date = this.querySelector('p:nth-child(2)').textContent;
-      const selectedDate = new Date(todayDate.getFullYear(), todayDate.getMonth(), parseInt(date));
-
-      const filteredPerformances = filterPerformancesByDate(selectedDate);
-      togglePerformanceVisibility(performanceItems, selectedDate);
-    });
-  });
 };
 
 // 공연 목록 렌더링 함수
-const render = (performancesToRender) => {
-  let mainslHTML = "";
-  let listHTML = "";
+const render = (performancesToRender, containerClass) => {
+    let mainslHTML = "";
+    let listHTML = "";
 
-  // 메인 슬라이드 HTML 생성
-  for (let i = 1; i <= 5; i++) {
-    mainslHTML += `
-      <div class="swiper-slide mainsl">
-        <div class="mainsl-img"><img src="/img/testpost.jpg" alt="공연포스터"></div>
-        <div class="mainsl-txt">
-          <p class="tit">공연${i}</p>
-          <p class="place">공연장소</p>
-          <p class="date">공연날짜</p>
-        </div>
-      </div>
-    `;
-  }
-
-  // performances 배열을 순회하면서 HTML 생성
-  performancesToRender.forEach((performance) => {
-    listHTML += `
-      <div class="swiper-slide list-item-bx">
-        <div class = "list-item" >
-            <div class="list-img"><a href=""><img src="/img/testpost.jpg" alt="공연이미지"></a></div>
-            <div class="list-txt">
-              <div class="tit-bx">
-                <div class="d-flex justify-content-between">
-                  <p class="tit">${performance.title}</p>
-                  <button><i class="fa-regular fa-heart"></i></button>
-                </div>
-                <p class="place">${performance.eventSite}</p>
-              </div>
-              <p class="date">${performance.startDate} ~ ${performance.endDate}</p>
+    // 메인 슬라이드 HTML 생성
+    mainslHTML = performancesToRender.map(item => `
+        <div class="swiper-slide mainsl">
+            <div class="mainsl-img"><img src="${item.poster['#text']}" alt="공연포스터"></div>
+            <div class="mainsl-txt">
+                <p class="tit">${item.prfnm['#text']}</p>
+                <p class="place">${item.fcltynm['#text']}</p>
+                <p class="date">${item.prfpdfrom['#text']} ~ ${item.prfpdto['#text']}</p>
             </div>
         </div>
-      </div>
-    `;
-  });
+    `).join('');
 
-  document.querySelector(".mainsl-bx").innerHTML = mainslHTML;
-  document.querySelectorAll(".main-cont-bx").forEach(el => el.innerHTML = listHTML);
+    // performances 배열을 순회하면서 HTML 생성
+    listHTML = performancesToRender.map(item => `
+        <div class="swiper-slide list-item-bx">
+            <div class="list-item">
+                <div class="list-img"><a href=""><img src="${item.poster['#text']}" alt="공연이미지"></a></div>
+                <div class="list-txt">
+                    <div class="tit-bx">
+                        <div class="d-flex justify-content-between">
+                            <p class="tit">${item.prfnm['#text']}</p>
+                            <button><i class="fa-regular fa-heart"></i></button>
+                        </div>
+                        <p class="place">${item.fcltynm['#text']}</p>
+                    </div>
+                    <p class="date">${item.prfpdfrom['#text']} ~ ${item.prfpdto['#text']}</p>
+                </div>
+            </div>
+        </div>
+    `).join('');
+
+  // 각 컨테이너 클래스에 맞게 HTML 삽입
+  const container = document.querySelector(containerClass);
+  if (container) {
+    container.innerHTML = containerClass === ".mainsl-bx" ? mainslHTML : listHTML;
+  } else {
+    console.error(`Container element with class ${containerClass} not found`);
+  }
+};
+// 데이터 요청 실행
+fetchKopisData("prffest?stdate=20250301&eddate=20250330&cpage=1&rows=10", ".mainsl-bx");
+fetchKopisData("pblprfr?&stdate=20230601&eddate=20260808&cpage=1&rows=10&prfstate=02", ".main-cont-bx");
+fetchKopisData("prfawad?stdate=20230601&eddate=20230630&cpage=1&rows=10&prfstate=03", ".award-wrap");
+fetchKopisData("pblprfr?&stdate=20230601&eddate=20260808&cpage=1&rows=10&prfstate=02", ".mdate-cont");
+
+
+// 날짜 버튼 생성 함수
+const addDate = () => {
+    const todayDate = new Date();
+    let currentDate = new Date();
+    let dateHTML = "";
+
+    // 날짜 버튼 생성
+    for (let i = 0; i < 25; i++) {
+        // currentDate의 날짜를 증가시키기 위해
+        currentDate.setDate(todayDate.getDate() + i); // 오늘 날짜에 i일을 더함
+
+        let dateStr = currentDate.toLocaleDateString('ko-KR', { month: 'long', day: '2-digit' });
+        let dateClass = i === 0 ? "mdate today" : "mdate";
+
+        // 각 버튼에 날짜 추가
+        dateHTML += `
+            <button class="${dateClass} swiper-slide" data-index="${i}">
+                <p>${i === 0 ? "Today" : ""}</p>
+                <p>${dateStr}</p>
+            </button>
+        `;
+    }
+
+    document.querySelector(".main-date-bx").innerHTML = dateHTML;
+
+    // 날짜 클릭 시
+    const mdateBtn = document.querySelectorAll(".mdate");
+    mdateBtn.forEach(button => {
+        button.addEventListener("click", function() {
+            // active 클래스 추가/제거
+            mdateBtn.forEach(btn => btn.classList.remove("active"));
+            this.classList.add("active");
+
+            // 클릭한 날짜 가져오기
+            const date = this.querySelector('p:nth-child(2)').textContent; // 클릭한 날짜 텍스트
+            const [month, day] = date.split("월");
+            const dayOfMonth = parseInt(day.replace("일", "").trim(), 10);
+
+            // 클릭된 날짜 계산
+            const selectedDate = new Date(todayDate.getFullYear(), todayDate.getMonth(), dayOfMonth);
+            // 필터링된 공연 리스트 표시
+            filterPerformancesByDate(selectedDate);
+        });
+    });
 };
 
-// 함수 실행
-render(performances);
-addDate();
+// 날짜별 공연 필터링 함수
+const filterPerformancesByDate = (selectedDate) => {
+    // 공연 항목을 모두 가져옴
+    const mdateCont = document.querySelector(".mdate-cont");
+    const performanceItems = mdateCont.querySelectorAll('.list-item-bx');
+
+    performanceItems.forEach(item => {
+        const dateRangeText = item.querySelector('.date').textContent;
+        const [startDateText, endDateText] = dateRangeText.split(' ~ ');
+
+        const startDate = new Date(startDateText.trim());
+        const endDate = new Date(endDateText.trim());
+
+        // 선택된 날짜가 공연 날짜 범위 안에 있으면 보이게, 아니면 숨기기
+        if (selectedDate >= startDate && selectedDate <= endDate) {
+            item.style.display = 'block';  // 해당 공연 보이기
+        } else {
+            item.style.display = 'none';   // 해당 공연 숨기기
+        }
+    });
+};
 
 /* s : 메인슬라이드(.mainsl-area) 스와이퍼 */
 var mainslSwiper = new Swiper(".mainsl-area", {
-  slidesPerView: 1,
-  spaceBetween: 0,
-  autoplay: {
-    delay: 3000,
-    disableOnInteraction: false,
-  },
-  pagination: {
-    el: ".swiper-pagination",
-    clickable: true,
-  },
-  breakpoints: {
-    768: {
-      slidesPerView: 2,
-      spaceBetween: 20,
+    slidesPerView: 1,
+    spaceBetween: 0,
+    autoplay: {
+        delay: 3000,
+        disableOnInteraction: false,
     },
-    1024: {
-      slidesPerView: 3,
-      spaceBetween: 20,
+    pagination: {
+        el: ".swiper-pagination",
+        clickable: true,
     },
-  },
+    breakpoints: {
+        768: {
+            slidesPerView: 2,
+            spaceBetween: 20,
+        },
+        1024: {
+            slidesPerView: 3,
+            spaceBetween: 20,
+        },
+    },
 });
 /* e : 메인 슬라이드 스와이퍼 */
 
-/* s : 메인1(.mainsl-area) 스와이퍼 */
+/* s : 메인1 스와이퍼 */
 var mainCont1Swiper = new Swiper(".main-cont-area", {
-  slidesPerView: 1,
-  spaceBetween: 20,
-  navigation: {
-    nextEl: ".swiper-button-next",
-    prevEl: ".swiper-button-prev",
-  },
-  breakpoints: {
-    500: {
-      slidesPerView: 2,
-      spaceBetween: 20,
+    slidesPerView: 1,
+    spaceBetween: 20,
+    navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
     },
-    768: {
-      slidesPerView: 3,
-      spaceBetween: 0,
+    breakpoints: {
+        500: {
+            slidesPerView: 2,
+            spaceBetween: 20,
+        },
+        768: {
+            slidesPerView: 3,
+            spaceBetween: 0,
+        },
+        1024: {
+            slidesPerView: 4,
+            spaceBetween: 0,
+        },
+        1400: {
+            slidesPerView: 4,
+            spaceBetween: 0,
+        },
     },
-    1024: {
-      slidesPerView: 4,
-      spaceBetween: 0,
-    },
-    1400: {
-      slidesPerView: 5,
-      spaceBetween: 0,
-    },
-  },
 });
 /* e : 메인 슬라이드 스와이퍼 */
 
 /* s : 날짜 스와이퍼 */
 var mdateSwiper = new Swiper(".main-date-area", {
-  slidesPerView:5,
-  spaceBetween: 10,
-  pagination: {
-    el: ".swiper-pagination",
-    clickable: true,
-  },
-  breakpoints: {
-    768: {
-      slidesPerView: 7,
-      spaceBetween: 20,
+    slidesPerView: 5,
+    spaceBetween: 10,
+    pagination: {
+        el: ".swiper-pagination",
+        clickable: true,
     },
-    1024: {
-      slidesPerView: 12,
-      spaceBetween: 20,
+    breakpoints: {
+        768: {
+            slidesPerView: 7,
+            spaceBetween: 20,
+        },
+        1024: {
+            slidesPerView: 12,
+            spaceBetween: 20,
+        },
     },
-  },
 });
 /* e : 날짜 스와이퍼 */
+
+// 페이지가 로드될 때, 기본적으로 날짜 버튼 생성
+addDate();

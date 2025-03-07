@@ -91,9 +91,15 @@ body{
   justify-content: space-between;
 }
 
-.product-info li{
+#perf-detail li{
+  display: flex;
+  gap: 1em;
   list-style-type: none;
   margin-bottom: 1em;
+}
+
+#perf-detail li div:last-child{
+  font-family: 'Pretendard-ExtraLight';
 }
 
 .book-wrap{
