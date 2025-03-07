@@ -28,11 +28,21 @@ pencilIcon.forEach((item, index) => {
     } else {
       // 편집 완료를 눌렀을 때
       if (profileRender(index)) { // 유효성 검사 후 렌더가 되고 true 를 반환받았을때
+        window.localStorage.setItem("profile", JSON.stringify(myProfile)); // 로컬 스토리지에 프로필 객체 저장
         profileItem[index].contentEditable = "false";
         profileInfo[index].style.borderColor = "lightgray";
         item.style.color = "gray";
         isEditable[index] = false;
       }
+    }
+  });
+});
+
+profileItem.forEach((item, index) => {
+  item.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      console.log("enter");
     }
   });
 });
@@ -44,6 +54,7 @@ inputFile.addEventListener("change", () => {
   fReader.onloadend = (event) => {
     profileIMG.style.backgroundImage = `url(${event.target.result})`;
     imgRoot = event.target.result;
+    window.localStorage.setItem("imgAdress", imgRoot);
   };
 });
 
@@ -189,4 +200,24 @@ const profileRender = (index) => {
   }
 };
 
-export default imgRoot;
+if (window.localStorage.getItem("profile") === null) { // 로컬 스토리지가 비어있을 경우 (프로필 설정을 한번도 안한 경우)
+  window.localStorage.setItem("profile", JSON.stringify(myProfile)); // 로컬 스토리지를 디폴트 값으로 저장
+}
+if (window.localStorage.getItem("imgAdress") === null) { // 이미지 스토리지가 비어있을 경우
+  window.localStorage.setItem("imgAdress", imgRoot); // 이미지 스토리지를 디폴트 값으로 저장
+}
+
+for(let i = 0; i <= 3; i++) { // 로컬 스토리지에 저장되어있는 객체를 가져와서 프로필에 렌더
+  if (i === 0) {
+    profileItem[i].textContent = JSON.parse(window.localStorage.getItem("profile")).name;
+  } else if (i === 1) {
+    profileItem[i].textContent = JSON.parse(window.localStorage.getItem("profile")).birth;
+  } else if (i === 2) {
+    profileItem[i].textContent = JSON.parse(window.localStorage.getItem("profile")).phone;
+  } else {
+    profileItem[i].textContent = JSON.parse(window.localStorage.getItem("profile")).email;
+  }
+}
+profileIMG.style.backgroundImage = `url(${window.localStorage.getItem("imgAdress")})`; // 프로필 이미지 렌더
+
+export default imgRoot; // 프로필 이미지 주소값 내보내기

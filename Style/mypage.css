@@ -76,9 +76,15 @@
   position: relative;
 }
 .profile-item {
+  display: inline-block;
+  position: absolute;
+  top: 0;
   outline: none;
+  width: 190px;
   margin-left: 1rem;
   font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
 }
 .profile i {
   position: absolute;
