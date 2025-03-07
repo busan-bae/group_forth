@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>header</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="../Style/common.css">
 </head>
@@ -22,34 +22,64 @@
                     <li><a href="">대중음악</a></li>
                 </ul>
             </nav>
+
             <div class="util-area">
-                <ul>
-                    <li><a href=""><i class="fa-solid fa-magnifying-glass"></i></a></li>
-                    <li><a href=""><i class="fa-solid fa-user"></i></a></li>
-                </ul>
+                <div class="search-area">
+                    <button id="btnSearch" class="btn btn-search" onclick="openSearchBox()">
+                        <i class="fa fa-search"></i>
+                    </button>
+                    <div class="search-wrap" id="search-list">
+                        <button class="close-btn" onclick="">&times;</button>
+                        <div class="search-group">
+                            <input id="search-input" class="search-input">
+                            <button onclick="getNewsByKeyword()" class="click-btn"> <i class="fa fa-search"></i></button>
+                        </div>
+            
+                        <section class="task-area">
+                            <div class="task-tabs">
+                                <div id="under-line"></div>
+                                <div id="all" class="active">
+                                    모두
+                                </div>
+                                <div id="ongoing">
+                                    진행중
+                                </div>
+                                <div id="done">
+                                    끝남
+                                </div>
+                            </div>
+                            <div id="task-board">
+            
+                            </div>
+            
+                        </section>
+            
+            
+                    </div>
+                </div>
+            
+                <div class="box">
+                    <a href="" class="btn user-area">
+                        <i class="fa-solid fa-user"></i>
+                    </a>
+                </div>
             </div>
+
             <button id="btnMenu" onclick="openNav()" class="btn-bar">
                 <i class="fa fa-bars"></i>
             </button>
-        </div>
-
-       
-        
-        <!-- <nav class="gnb1" id="sideNav">
-            <button id="btnClose" onclick="closeNav()" class="btn-close">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-        
-            <div class="side-nav">
-                <button>Business</button>
-                <button>Entertainment</button>
-                <button>General</button>
-                <button>Health</button>
-                <button>Science</button>
-                <button>Sports</button>
-                <button>Technology</button>
+            <div class="side-menu" id="mySidenav">
+                <button class="close-btn" onclick="closeNav()">&times;</button>
+                <div class="side-menu-list" id="menu-list">
+                    <ul>
+                        <li><a href="">뮤지컬</a></li>
+                        <li><a href="">연극</a></li>
+                        <li><a href="">대중음악</a></li>
+                    </ul>
+                </div>
             </div>
-        </nav> -->
+        </div>
+      
     </header>
     
     <script src="../JS/common.js"></script>
