@@ -42,13 +42,35 @@ body{
   margin-bottom: 2.4rem;
 }
 
-.product-name #now-showing{
+.product-name .now-showing{
   width: 100px;
   align-self: flex-start;
   padding: 0.4em;
   border: 1px solid green;
   border-radius: 20px;
   background-color: green;
+  color: white;
+  text-align: center;
+}
+
+.product-name .tbd{
+  width: 100px;
+  align-self: flex-start;
+  padding: 0.4em;
+  border: 1px solid lightgray;
+  border-radius: 20px;
+  background-color: lightgray;
+  color: black;
+  text-align: center;
+}
+
+.product-name .complete{
+  width: 100px;
+  align-self: flex-start;
+  padding: 0.4em;
+  border: 1px solid rgb(207, 4, 4);
+  border-radius: 20px;
+  background-color: rgb(207, 4, 4);
   color: white;
   text-align: center;
 }
@@ -81,7 +103,11 @@ body{
   padding: 1em;
   position: absolute;
   bottom: -60px;
-  left: 250px
+  left: 250px;
+}
+
+.like i{
+  cursor: pointer;
 }
 
 
@@ -96,6 +122,10 @@ body{
   gap: 1em;
   list-style-type: none;
   margin-bottom: 1em;
+}
+
+#perf-detail li div:first-child{
+  white-space: nowrap;
 }
 
 #perf-detail li div:last-child{
@@ -117,6 +147,15 @@ body{
   background-color: #00A9FF;
 }
 
+.book-wrap .is-complete{
+  flex-grow: 0.4;
+  padding: 0.8em;
+  border:lightgray;
+  border-radius: 10px;
+  color: darkgray;
+  background-color: lightgray;
+}
+
 .detail-nav{
   display: flex;
   gap: 2em;
@@ -133,7 +172,7 @@ body{
   height: 4px;
   background-color: #00A9FF;
   position: absolute;
-  width: 110px;
+  width: 100px;
   left: 0px;
   top: 52px;
   padding: 0;
@@ -141,12 +180,31 @@ body{
   border-radius: 5px;
 }
 
-.detail-contents{
+#detail-contents{
   padding-top: 6rem;
 }
 
+#detail-contents img{
+  max-width: 750px;
+}
+
 @media screen and (max-width: 768px) {
+  .detail-top .product-name{
+    display: flex;
+    flex-direction: column-reverse;
+    margin-top: 5em;
+    margin-bottom: 2.4rem;
+  }
+
+  .product-name .now-showing{
+    margin-bottom: 1em;
+  }
+
   .book-wrap button{
+    flex-grow: 1;
+  }
+
+  .book-wrap .is-complete{
     flex-grow: 1;
   }
 
@@ -159,6 +217,7 @@ body{
   .detail-nav div{
     padding: 0.5em;
     text-align: center;
+    color: black;
     border: 1px solid lightgray;
     background-color: lightgray;
     flex-grow: 1;
@@ -172,8 +231,18 @@ body{
     border-radius: 0 10px 10px 0;
   }
 
+  .detail-nav .active{
+    color: white;
+    border: 1px solid darkgray;
+    background-color: darkgray;
+  }
+
   #underline{
     display: none;
+  }
+
+  #detail-contents img{
+    width: 100%;
   }
 }
 
@@ -186,5 +255,9 @@ body{
   .product-summary > div:first-child{
     margin-top: 1em;
     margin-bottom: 3em;
+  }
+
+  #detail-contents img{
+    width: 100%;
   }
 }
