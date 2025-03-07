@@ -13,7 +13,7 @@ const myProfile = {
 let isEditable = [false, false, false, false]; // 각 항목별 편집 활성화 여부 체크용 배열
 
 // 프로필 이미지 주소값
-let imgRoot = "https://static.vecteezy.com/system/resources/thumbnails/013/360/247/small/default-avatar-photo-icon-social-media-profile-sign-symbol-vector.jpg";
+export let imgRoot = "https://static.vecteezy.com/system/resources/thumbnails/013/360/247/small/default-avatar-photo-icon-social-media-profile-sign-symbol-vector.jpg";
 
 // 연필 버튼 클릭 이벤트
 pencilIcon.forEach((item, index) => {
@@ -219,5 +219,3 @@ for(let i = 0; i <= 3; i++) { // 로컬 스토리지에 저장되어있는 객�
   }
 }
 profileIMG.style.backgroundImage = `url(${window.localStorage.getItem("imgAdress")})`; // 프로필 이미지 렌더
-
-export default imgRoot; // 프로필 이미지 주소값 내보내기
