@@ -18,7 +18,7 @@
   flex-direction: column;
   align-items: center;
   margin-top: 5rem;
-  margin-bottom: 12rem;
+  margin-bottom: 14rem;
 }
 .profile-area h1 {
   font-weight: 700;
@@ -27,7 +27,7 @@
   display: flex;
   justify-content: center;
   width: 100%;
-  margin-top: 5rem;
+  margin-top: 7rem;
 }
 .profile-img {
   border-radius: 100%;
@@ -99,7 +99,7 @@
 }
 .reservation-area h3 {
   font-weight: 700;
-  font-size: 25px;
+  font-size: 22px;
 }
 .reservation-list {
   border-top: 1px solid lightgray;
@@ -114,7 +114,7 @@
 }
 .liked-area h3 {
   font-weight: 700;
-  font-size: 25px;
+  font-size: 22px;
 }
 .liked-list {
   border-top: 1px solid lightgray;
