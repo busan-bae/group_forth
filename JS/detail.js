@@ -92,6 +92,7 @@ const getPerfDetail = async () => {
     ];
   } catch (error) {
     console.error("오류 발생:", error.message);
+    renderError(error.message);
   }
 
   renderDetail();
@@ -120,6 +121,7 @@ const getMapInfo = async () => {
     console.log(mapObject);
   } catch (error) {
     console.error("API 오류 발생:", error);
+    renderError(error.message);
   }
 
   renderMap();
@@ -337,6 +339,17 @@ const bookToggle = (event) => {
 //찜한 공연 및 예매된 공연 필터링
 const getLikedPerformances = () => perfStates.filter((perf) => perf.isLiked);
 const getBookedPerformances = () => perfStates.filter((perf) => perf.isBooked);
+
+//에러 화면 표시
+const renderError = (errorMessage) => {
+  document.querySelector(
+    ".detail-body-contents"
+  ).innerHTML = `<div class="alert alert-light" role="alert" style="text-align: center;">
+  ${errorMessage}</div>`;
+  document.querySelector("#perf-detail").innerHTML = document.querySelector(
+    ".detail-body-contents"
+  ).innerHTML;
+};
 
 getPerfDetail();
 
