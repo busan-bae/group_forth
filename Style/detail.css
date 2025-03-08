@@ -180,11 +180,13 @@ body{
   border-radius: 5px;
 }
 
-#detail-contents{
+.detail-body-contents{
   padding-top: 6rem;
+  display: flex;
+  justify-content: center;
 }
 
-#detail-contents img{
+#detail-image img{
   max-width: 750px;
 }
 
@@ -241,7 +243,11 @@ body{
     display: none;
   }
 
-  #detail-contents img{
+  #detail-image img{
+    width: 100%;
+  }
+
+  #map{
     width: 100%;
   }
 }
@@ -257,7 +263,11 @@ body{
     margin-bottom: 3em;
   }
 
-  #detail-contents img{
+  #detail-image img{
+    width: 100%;
+  }
+
+  #map{
     width: 100%;
   }
 }
