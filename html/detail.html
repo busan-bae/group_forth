@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="../Style/detail.css" />
   </head>
   <body>
+    <div id="header"></div>
     <section class="container">
       <section class="contents">
         <div class="detail-top">
@@ -85,12 +86,28 @@
         </div>
       </section>
     </section>
+    <div id="footer"></div>
 
+    <script>
+      // common.html의 내용 삽입
+      document.getElementById("header").innerHTML = fetch("header.html")
+        .then((response) => response.text())
+        .then((html) => {
+          document.getElementById("header").innerHTML = html;
+        });
+
+      document.getElementById("footer").innerHTML = fetch("footer.html")
+        .then((response) => response.text())
+        .then((html) => {
+          document.getElementById("footer").innerHTML = html;
+        });
+    </script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"
     ></script>
+    <script type="module" src="../JS/common.js"></script>
     <script type="module" src="../JS/detail.js"></script>
     <script
       src="https://kit.fontawesome.com/30e0337192.js"
