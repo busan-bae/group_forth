@@ -186,6 +186,19 @@ body{
   justify-content: center;
 }
 
+#map{
+  margin-right: 2rem;
+  max-width: 100%;
+}
+
+.detail-body-contents .venue-info div{
+  padding: 0.5em;
+}
+
+.detail-body-contents .venue-info div:first-child{
+  font-family: 'Pretendard-Bold';
+}
+
 #detail-image img{
   max-width: 750px;
 }
@@ -240,7 +253,7 @@ body{
   }
 
   #underline{
-    display: none;
+    visibility: hidden;
   }
 
   #detail-image img{
@@ -248,7 +261,24 @@ body{
   }
 
   #map{
-    width: 100%;
+    margin: 0;
+    max-width: 100%;
+  }
+
+  .detail-body-contents{
+    padding-top: 6rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  #map{
+    margin-bottom: 2rem;
+  }
+  
+  .detail-body-contents .venue-info div{
+    padding: 0.5em;
+    text-align: center;
   }
 }
 
@@ -268,6 +298,23 @@ body{
   }
 
   #map{
-    width: 100%;
+    max-width: 100%;
+  }
+
+  .detail-body-contents{
+    padding-top: 6rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  #map{
+    margin: 0;
+    margin-bottom: 2rem;
+  }
+  
+  .detail-body-contents .venue-info div{
+    text-align: center;
+    padding: 0.5em;
   }
 }
