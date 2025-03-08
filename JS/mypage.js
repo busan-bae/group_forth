@@ -1,8 +1,21 @@
+import {
+  perfStates,
+  getBookedPerformances,
+  getLikedPerformances,
+  likeToggle,
+  bookToggle,
+} from "./detail.js";
+
 const profileItem = document.querySelectorAll(".profile-item");
 const profileInfo = document.querySelectorAll(".profile-info div");
 const pencilIcon = document.querySelectorAll(".profile i");
 const profileIMG = document.querySelector(".profile-img");
 const inputFile = document.getElementById("input-file");
+const carouselInner = document.querySelector(".carousel-inner");
+const reservationList = document.querySelector(".reservation-list");
+const likedList = document.querySelector(".liked-list");
+const apiKey = "d98d9402f26042ed994300072acd892e";
+let perfAddress = "";
 const myProfile = {
   // 프로필 객체
   name: "코알누",
@@ -13,7 +26,8 @@ const myProfile = {
 let isEditable = [false, false, false, false]; // 각 항목별 편집 활성화 여부 체크용 배열
 
 // 프로필 이미지 주소값
-export let imgRoot = "https://static.vecteezy.com/system/resources/thumbnails/013/360/247/small/default-avatar-photo-icon-social-media-profile-sign-symbol-vector.jpg";
+export let imgRoot =
+  "https://static.vecteezy.com/system/resources/thumbnails/013/360/247/small/default-avatar-photo-icon-social-media-profile-sign-symbol-vector.jpg";
 
 // 연필 버튼 클릭 이벤트
 pencilIcon.forEach((item, index) => {
@@ -27,7 +41,8 @@ pencilIcon.forEach((item, index) => {
       isEditable[index] = true;
     } else {
       // 편집 완료를 눌렀을 때
-      if (profileRender(index)) { // 유효성 검사 후 렌더가 되고 true 를 반환받았을때
+      if (profileRender(index)) {
+        // 유효성 검사 후 렌더가 되고 true 를 반환받았을때
         window.localStorage.setItem("profile", JSON.stringify(myProfile)); // 로컬 스토리지에 프로필 객체 저장
         profileItem[index].contentEditable = "false";
         profileInfo[index].style.borderColor = "lightgray";
@@ -57,6 +72,19 @@ inputFile.addEventListener("change", () => {
     window.localStorage.setItem("imgAdress", imgRoot);
   };
 });
+
+const getPerfInfo = async (perfID) => {
+  // 매개변수로 받은 perfID 의 포스터 이미지 주소값을 가져오는 함수
+  const proxy = "https://cors-anywhere.herokuapp.com/";
+  const url = new URL(
+    `http://kopis.or.kr/openApi/restful/pblprfr/${perfID}?service=${apiKey}`
+  );
+  const response = await fetch(proxy + url);
+  const text = await response.text();
+  const xml = new DOMParser().parseFromString(text, "application/xml");
+  const perfDB = xml.getElementsByTagName("db")[0];
+  perfAddress = perfDB.getElementsByTagName("poster")[0].textContent;
+};
 
 // 공통된 유효성 체크 항목
 const trueCheck = (index, key) => {
@@ -200,22 +228,134 @@ const profileRender = (index) => {
   }
 };
 
-if (window.localStorage.getItem("profile") === null) { // 로컬 스토리지가 비어있을 경우 (프로필 설정을 한번도 안한 경우)
+if (window.localStorage.getItem("profile") === null) {
+  // 로컬 스토리지가 비어있을 경우 (프로필 설정을 한번도 안한 경우)
   window.localStorage.setItem("profile", JSON.stringify(myProfile)); // 로컬 스토리지를 디폴트 값으로 저장
 }
-if (window.localStorage.getItem("imgAdress") === null) { // 이미지 스토리지가 비어있을 경우
+if (window.localStorage.getItem("imgAdress") === null) {
+  // 이미지 스토리지가 비어있을 경우
   window.localStorage.setItem("imgAdress", imgRoot); // 이미지 스토리지를 디폴트 값으로 저장
 }
 
-for(let i = 0; i <= 3; i++) { // 로컬 스토리지에 저장되어있는 객체를 가져와서 프로필에 렌더
+for (let i = 0; i <= 3; i++) {
+  // 로컬 스토리지에 저장되어있는 객체를 가져와서 프로필에 렌더
   if (i === 0) {
-    profileItem[i].textContent = JSON.parse(window.localStorage.getItem("profile")).name;
+    profileItem[i].textContent = JSON.parse(
+      window.localStorage.getItem("profile")
+    ).name;
   } else if (i === 1) {
-    profileItem[i].textContent = JSON.parse(window.localStorage.getItem("profile")).birth;
+    profileItem[i].textContent = JSON.parse(
+      window.localStorage.getItem("profile")
+    ).birth;
   } else if (i === 2) {
-    profileItem[i].textContent = JSON.parse(window.localStorage.getItem("profile")).phone;
+    profileItem[i].textContent = JSON.parse(
+      window.localStorage.getItem("profile")
+    ).phone;
   } else {
-    profileItem[i].textContent = JSON.parse(window.localStorage.getItem("profile")).email;
+    profileItem[i].textContent = JSON.parse(
+      window.localStorage.getItem("profile")
+    ).email;
   }
 }
-profileIMG.style.backgroundImage = `url(${window.localStorage.getItem("imgAdress")})`; // 프로필 이미지 렌더
+profileIMG.style.backgroundImage = `url(${window.localStorage.getItem(
+  "imgAdress"
+)})`; // 프로필 이미지 렌더
+
+// 예매한 공연 포스터 불러와서 캐러셀에 추가하는 함수
+const loadBookedPosters = async () => {
+  const bookedPerformances = await getBookedPerformances(); // 예매 목록 가져오기
+
+  if (bookedPerformances.length === 0) {
+    reservationList.innerHTML = `예매 내용이 없습니다`;
+    return;
+  }
+
+  let posters = [];
+  for (const perfID of bookedPerformances) {
+    await getPerfInfo(perfID); // perfAddress 값을 업데이트
+    posters.push(perfAddress);
+  }
+
+  // 캐러셀 아이템을 동적으로 추가
+  let carouselHTML = `
+    <div id="carouselExample" class="carousel slide carousel-main">
+      <div class="carousel-inner">
+  `;
+
+  for (let i = 0; i < posters.length; i += 4) {
+    const fourPosters = posters.slice(i, i + 4);
+    const activeClass = i === 0 ? "active" : "";
+
+    carouselHTML += `
+      <div class="carousel-item ${activeClass}">
+        ${fourPosters.map((poster) => `<img src="${poster}">`).join("")}
+      </div>
+    `;
+  }
+
+  carouselHTML += `
+      </div>
+      <button class="carousel-control-prev carousel-button" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon carousel-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next carousel-button" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+        <span class="carousel-control-next-icon carousel-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+  `;
+
+  reservationList.innerHTML = carouselHTML;
+};
+
+// 찜한 공연 포스터 불러와서 캐러셀에 추가하는 함수
+const loadLikedPosters = async () => {
+  const likedPerformances = await getLikedPerformances(); // 찜한 목록 가져오기
+
+  if (likedPerformances.length === 0) {
+    likedList.innerHTML = `찜한 내역이 없습니다`;
+    return;
+  }
+
+  let posters = [];
+  for (const perfID of likedPerformances) {
+    await getPerfInfo(perfID); // perfAddress 값을 업데이트
+    posters.push(perfAddress);
+  }
+
+  // 캐러셀 아이템을 동적으로 추가
+  let carouselHTML = `
+    <div id="carouselLikedExample" class="carousel slide carousel-main">
+      <div class="carousel-inner">
+  `;
+
+  for (let i = 0; i < posters.length; i += 4) {
+    const fourPosters = posters.slice(i, i + 4);
+    const activeClass = i === 0 ? "active" : "";
+
+    carouselHTML += `
+      <div class="carousel-item ${activeClass}">
+        ${fourPosters.map((poster) => `<img src="${poster}">`).join("")}
+      </div>
+    `;
+  }
+
+  carouselHTML += `
+      </div>
+      <button class="carousel-control-prev carousel-button" type="button" data-bs-target="#carouselLikedExample" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon carousel-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next carousel-button" type="button" data-bs-target="#carouselLikedExample" data-bs-slide="next">
+        <span class="carousel-control-next-icon carousel-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+  `;
+
+  likedList.innerHTML = carouselHTML;
+};
+
+loadBookedPosters();
+loadLikedPosters();
