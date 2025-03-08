@@ -3,21 +3,24 @@ const apiKey = "31b9f7fd6d5642719e7bb23547c49e5a";
 const baseURL = "https://www.kopis.or.kr/openApi/restful/";
 
 const regionFilter = document.querySelector(".region-filter")
-
 const sortFilter = document.querySelector(".filter");
+const playFilter = document.querySelector(".play-filter")
+
 sortFilter.addEventListener("change", (event) => applySortFilter(event));
 regionFilter.addEventListener("change",(event)=>applyRegionFilter(event)) 
-
+playFilter.addEventListener("change", (event)=>applypplatfilter(event))
 
 
 let allPerformances = []; // 전체 공연 데이터를 저장
 const totalPages = 5; // 가져올 페이지 수
 const itemsPerPage = 12; // 한 페이지에 보여줄 공연 수
 let currentPage = 1; // 현재 페이지
-let currentRegion = "all";
+// let currentRegion = "all";
 let filteredPerformances = [];
 let selectedRegion = "all"
 let selectedSort = "1"
+let prfstate = "02"
+
 
 // XML -> JSON 변환 함수
 const xmlToJson = (xml) => {
@@ -59,7 +62,7 @@ const fetchAllPages = async () => {
       allPerformances = []
       // 여러 페이지의 데이터를 요청
       for (let page = 1; page <= totalPages; page++) {
-          const apiURL = `${baseURL}pblprfr?stdate=20250307&eddate=20250406&cpage=${page}&rows=99&prfstate=02&service=${apiKey}&shcate=GGGA`;
+          const apiURL = `${baseURL}pblprfr?stdate=20250307&eddate=20250406&cpage=${page}&rows=99&prfstate=${prfstate}&service=${apiKey}&shcate=GGGA`;
           requests.push(fetch(proxy + encodeURIComponent(apiURL))
               .then(response => {
                   if (!response.ok) throw new Error(`HTTP 오류: ${response.status}`);
@@ -138,7 +141,7 @@ const applyRegionFilter = (event) => {
 
 const applySortFilter = (event) => {
     selectedSort = event.target.value;
-    console.log("선택된 정렬:", selectedSort);
+
 
     if (selectedSort === "1") { // 가나다순 정렬
         filteredPerformances.sort((a, b) => {
@@ -159,6 +162,12 @@ const applySortFilter = (event) => {
 };
 
 
+const applypplatfilter = (event) => {
+    prfstate = event.target.value;
+    fetchAllPages()
+}
+
+
 
 //list 뽑기//
 const renderPage = (page) => {
@@ -171,7 +180,7 @@ const renderPage = (page) => {
   container.innerHTML = performancesToRender.map(performance => `
       <div class="col">
           <div class="list-item">
-            <div class="list-img"><a href=""><img src="${performance.poster['#text']}" alt="공연이미지"></a></div>
+            <div class="list-img"><a href=""><img class="link-to-detail" src="${performance.poster['#text']}" alt="공연이미지" data-id="${performance.mt20id['#text']}"></a></div>
                 <div class="list-txt">
                     <div class="tit-bx">
                         <div class="d-flex justify-content-between>
@@ -185,43 +194,79 @@ const renderPage = (page) => {
           </div>
       </div>
   `).join("");
-
   renderPagination(); // 페이지네이션 갱신
 };
 //list 뽑기//
 
 
-/* <div class="card-body">
-<img src="${performance.poster?.["#text"] || 'no-image.jpg'}" class="card-img-top" alt="${performance.prfnm?.["#text"] || '공연명 없음'}">
-<i class="fa-regular fa-heart"></i>
-<h4>${performance.prfnm?.["#text"] || '공연명 없음'}</h4>
-<p class="place">${performance.fcltynm?.["#text"]}</p>
-<p class="date">${performance.prfpdfrom?.["#text"]} ~ ${performance.prfpdto?.["#text"]}</p>
-</div> */
 
 
-// 페이지네이션 렌더링 함수
+//페이지 네이션
 const renderPagination = () => {
-  const totalPages = Math.ceil(filteredPerformances.length / itemsPerPage);
-  const paginationContainer = document.querySelector(".pagination");
-  paginationContainer.innerHTML = `
-      <li class="page-item ${currentPage === 1 ? "disabled" : ""}">
-          <a class="page-link" href="#" aria-label="Previous" onclick="changePage(${currentPage - 1})">
-              <span aria-hidden="true">&laquo;</span>
-          </a>
-      </li>
-      ${Array.from({ length: totalPages }, (_, i) => `
-          <li class="page-item ${i + 1 === currentPage ? "active" : ""}">
-              <a class="page-link" href="#" onclick="changePage(${i + 1})">${i + 1}</a>
-          </li>
-      `).join("")}
-      <li class="page-item ${currentPage === totalPages ? "disabled" : ""}">
-          <a class="page-link" href="#" aria-label="Next" onclick="changePage(${currentPage + 1})">
-              <span aria-hidden="true">&raquo;</span>
-          </a>
-      </li>
-  `;
+    const totalPages = Math.ceil(filteredPerformances.length / itemsPerPage);
+    const paginationContainer = document.querySelector(".pagination");
+    
+    // 기존 내용을 초기화
+    paginationContainer.innerHTML = "";
+
+    // 시작 페이지와 끝 페이지 설정 (최대 5개만 보이게)
+    let startPage = Math.max(1, currentPage - 2);
+    let endPage = Math.min(totalPages, startPage + 4);
+    if (endPage - startPage < 4) {
+        startPage = Math.max(1, endPage - 4);
+    }
+
+    // 이전 버튼 생성
+    const prevItem = document.createElement("li");
+    prevItem.className = `page-item ${currentPage === 1 ? "disabled" : ""}`;
+    const prevLink = document.createElement("a");
+    prevLink.className = "page-link";
+    prevLink.href = "#";
+    prevLink.setAttribute("aria-label", "Previous");
+    prevLink.innerHTML = "<span aria-hidden='true'>&laquo;</span>";
+    if (currentPage > 1) {
+        prevLink.addEventListener("click", (e) => {
+            e.preventDefault();
+            changePage(currentPage - 1);
+        });
+    }
+    prevItem.appendChild(prevLink);
+    paginationContainer.appendChild(prevItem);
+
+    // 페이지 번호 생성 (최대 5개만 표시)
+    for (let i = startPage; i <= endPage; i++) {
+        const pageItem = document.createElement("li");
+        pageItem.className = `page-item ${i === currentPage ? "active" : ""}`;
+        const pageLink = document.createElement("a");
+        pageLink.className = "page-link";
+        pageLink.href = "#";
+        pageLink.textContent = i;
+        pageLink.addEventListener("click", (e) => {
+            e.preventDefault();
+            changePage(i);
+        });
+        pageItem.appendChild(pageLink);
+        paginationContainer.appendChild(pageItem);
+    }
+
+    // 다음 버튼 생성
+    const nextItem = document.createElement("li");
+    nextItem.className = `page-item ${currentPage === totalPages ? "disabled" : ""}`;
+    const nextLink = document.createElement("a");
+    nextLink.className = "page-link";
+    nextLink.href = "#";
+    nextLink.setAttribute("aria-label", "Next");
+    nextLink.innerHTML = "<span aria-hidden='true'>&raquo;</span>";
+    if (currentPage < totalPages) {
+        nextLink.addEventListener("click", (e) => {
+            e.preventDefault();
+            changePage(currentPage + 1);
+        });
+    }
+    nextItem.appendChild(nextLink);
+    paginationContainer.appendChild(nextItem);
 };
+
 
 // 페이지 변경 함수
 const changePage = (page) => {
@@ -231,3 +276,4 @@ const changePage = (page) => {
   renderPage(currentPage);
 };
 
+// import { likeToggle, bookToggle, perfState } from "./detail.js"
