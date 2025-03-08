@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>onsite</title>
+    <title>🏞️onsite</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://kit.fontawesome.com/f4a72bf533.js" crossorigin="anonymous"></script>   
     
@@ -14,17 +14,22 @@
      <!--제목영역역-->
     <section class="head-background">
         <div>
-            <h1>뮤지컬</h1> <!--js로 값 가져오기-->
+            <h1 class="list-title">뮤지컬</h1> 
         </div>
     </section>
-    <!--제목영역-->
-     <!--분류하는 박스-->
+
+     <!--장소별-->
+
     <section>
         <div class="main-filter-bar">
             <div class="main-filter container">
                 <div class="icon-box">
                     <i class="fa-solid fa-house fa-2x"></i>
                 </div>
+                <select class="play-filter">
+                    <option value="02">공연중</option>
+                    <option value="01">공연예정</option> 
+                </select>
                 <select class="region-filter">
                 </select>
                 <select class="filter">
@@ -46,28 +51,18 @@
         <!--상세리스트-->
         <!--페이지네이션-->
         <nav aria-label="Page navigation example">
-            <ul class="pagination"> <!--js로 값 가져오기-->
-                <li class="page-item">
-                <a class="page-link" href="#" aria-label="Previous">
-                  <span aria-hidden="true">&laquo;</span>
-                </a>
-              </li>
-              <li class="page-item"><a class="page-link" href="#">1</a></li>
-              <li class="page-item"><a class="page-link" href="#">2</a></li>
-              <li class="page-item"><a class="page-link" href="#">3</a></li>
-              <li class="page-item">
-                <a class="page-link" href="#" aria-label="Next">
-                  <span aria-hidden="true">&raquo;</span>
-                </a>
-              </li>
+            <ul class="pagination"> 
+                
+                <!--js-->
+   
             </ul>
           </nav>
         </div>
-        <!--페이지네이션-->
     </section>
 
     <script src="https://kit.fontawesome.com/f4a72bf533.js" crossorigin="anonymous"></script>   
     <script src="/JS/listpage.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script type="module" src="/JS/detail.js"></script> 
 </body>
 </html>
