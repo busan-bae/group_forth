@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>header</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../Style/common.css" />
+  </head>
+  <body>
+    <header class="header">
+      <div class="header-inner">
+        <h1 class="logo">
+          <a href="/index.html">
+            <img src="../img/logo.png" alt="onstage로고" />
+          </a>
+        </h1>
+        <nav class="gnb">
+          <ul>
+            <li><a href="/html/listpage.html">뮤지컬</a></li>
+            <li><a href="/html/listpage.html">연극</a></li>
+            <li><a href="/html/listpage.html">대중음악</a></li>
+          </ul>
+        </nav>
+
+        <div class="util-area">
+          <div class="search-area">
+            <button id="btnSearch" class="btn btn-search">
+              <i class="fa fa-search"></i>
+            </button>
+            <div class="search-wrap" id="search-list">
+              <div class="inner">
+                <div class="search-group">
+                  <input id="search-input" class="search-input" />
+                  <button class="click-btn" id="add-button">
+                    <i class="fa fa-search"></i>
+                  </button>
+                </div>
+
+                <section class="recent-area">
+                  <h2 class="title">최근 검색어</h2>
+                </section>
+                <section class="show-area">
+                  <h2 class="title">최근 본 공연</h2>
+                </section>
+                <button class="close-btn" onclick="">&times;</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="user-area">
+            <a href="/html/mypage.html" class="btn user-wrap">
+              <i class="fa-solid fa-user"></i>
+            </a>
+          </div>
+        </div>
+
+        <button id="btnMenu" class="btn-bar">
+          <i class="fa fa-bars"></i>
+        </button>
+        <div class="side-menu" id="mySidenav">
+          <div class="side-inner">
+            <h2 class="menu-logo">
+              <a href=""><img src="../img/logo.png" alt="" /></a>
+            </h2>
+            <div class="side-menu-list" id="menu-list">
+              <ul>
+                <li>
+                  <a href="/html/listpage.html">뮤지컬 <i></i></a>
+                </li>
+                <li><a href="/html/listpage.html">연극</a></li>
+                <li><a href="/html/listpage.html">대중음악</a></li>
+              </ul>
+            </div>
+
+            <div class="side-menu-list" id="menu-list">
+              <ul>
+                <li><a href="/html/mypage.html">마이페이지</a></li>
+                <li><a href="">티켓예매</a></li>
+              </ul>
+            </div>
+            <button class="close-btn">&times;</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <script src="../JS/common.js"></script>
+    <script type="module" src="../JS/mypage.js"></script>
+  </body>
+</html>

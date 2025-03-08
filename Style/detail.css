@@ -1,0 +1,321 @@
+@font-face {
+  font-family: 'Pretendard-ExtraLight';
+  src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-ExtraLight.woff') format('woff');
+  font-weight: 200;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Pretendard-Regular';
+  src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Pretendard-Bold';
+  src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+}
+
+body{
+  font-family: 'Pretendard-Regular';
+}
+
+.container{
+  min-height: 100vh;
+}
+
+.contents{
+  padding: 1em;
+}
+
+.detail-top{
+  padding-bottom: 6.5rem;
+}
+
+.detail-top .product-name{
+  display: flex;
+  justify-content: space-between;
+  margin-top: 5em;
+  margin-bottom: 2.4rem;
+}
+
+.product-name .now-showing{
+  width: 100px;
+  align-self: flex-start;
+  padding: 0.4em;
+  border: 1px solid green;
+  border-radius: 20px;
+  background-color: green;
+  color: white;
+  text-align: center;
+}
+
+.product-name .tbd{
+  width: 100px;
+  align-self: flex-start;
+  padding: 0.4em;
+  border: 1px solid lightgray;
+  border-radius: 20px;
+  background-color: lightgray;
+  color: black;
+  text-align: center;
+}
+
+.product-name .complete{
+  width: 100px;
+  align-self: flex-start;
+  padding: 0.4em;
+  border: 1px solid rgb(207, 4, 4);
+  border-radius: 20px;
+  background-color: rgb(207, 4, 4);
+  color: white;
+  text-align: center;
+}
+
+.product-name .product-name-wrap{
+  font-family: 'Pretendard-ExtraLight';
+  display: flex;
+  gap: 1em;
+}
+
+.product-name-wrap h2{
+  font-family: 'Pretendard-Bold';
+}
+
+.product-summary > div{
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+.product-image div{
+  position: relative;
+  max-width: 300px;
+}
+
+.product-image img{
+  max-width: 100%;
+}
+
+.product-image .like{
+  padding: 1em;
+  position: absolute;
+  bottom: 3px;
+  left: 250px;
+}
+
+.like i{
+  cursor: pointer;
+}
+
+
+.product-info{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+#perf-detail li{
+  display: flex;
+  gap: 1em;
+  list-style-type: none;
+  margin-bottom: 1em;
+}
+
+#perf-detail li div:first-child{
+  white-space: nowrap;
+}
+
+#perf-detail li div:last-child{
+  font-family: 'Pretendard-ExtraLight';
+}
+
+.book-wrap{
+  display: flex;
+  justify-content: center;
+  padding: 1.5em;
+}
+
+.book-wrap button{
+  flex-grow: 0.4;
+  padding: 0.8em;
+  border:#00A9FF;
+  border-radius: 10px;
+  color: white;
+  background-color: #00A9FF;
+}
+
+.book-wrap .is-complete{
+  flex-grow: 0.4;
+  padding: 0.8em;
+  border:lightgray;
+  border-radius: 10px;
+  color: darkgray;
+  background-color: lightgray;
+}
+
+.detail-nav{
+  display: flex;
+  gap: 2em;
+  position: relative;
+  border-bottom: 1px solid lightgrey;
+}
+
+.detail-nav div{
+  padding: 1em;
+  cursor: pointer;
+}
+
+#underline{
+  height: 4px;
+  background-color: #00A9FF;
+  position: absolute;
+  width: 100px;
+  left: 0px;
+  top: 47px;
+  padding: 0;
+  transition: 0.5s;
+  border-radius: 5px;
+}
+
+.detail-body-contents{
+  padding-top: 6rem;
+  display: flex;
+  justify-content: center;
+}
+
+#map{
+  margin-right: 2rem;
+  max-width: 100%;
+  display: none;
+}
+
+.detail-body-contents .venue-info div{
+  padding: 0.5em;
+}
+
+.detail-body-contents .venue-info div:first-child{
+  font-family: 'Pretendard-Bold';
+}
+
+#detail-image img{
+  max-width: 750px;
+}
+
+@media screen and (max-width: 768px) {
+  .detail-top .product-name{
+    display: flex;
+    flex-direction: column-reverse;
+    margin-top: 5em;
+    margin-bottom: 2.4rem;
+  }
+
+  .product-name .now-showing{
+    margin-bottom: 1em;
+  }
+
+  .book-wrap button{
+    flex-grow: 1;
+  }
+
+  .book-wrap .is-complete{
+    flex-grow: 1;
+  }
+
+  .detail-nav{
+    gap: 0;
+    justify-content: center;
+    border: none;
+  }
+
+  .detail-nav div{
+    padding: 0.5em;
+    text-align: center;
+    color: black;
+    border: 1px solid lightgray;
+    background-color: lightgray;
+    flex-grow: 1;
+  }
+
+  .detail-nav div:nth-child(2){
+    border-radius: 10px 0 0 10px;
+  }
+
+  .detail-nav div:last-child{
+    border-radius: 0 10px 10px 0;
+  }
+
+  .detail-nav .active{
+    color: white;
+    border: 1px solid darkgray;
+    background-color: darkgray;
+  }
+
+  #underline{
+    visibility: hidden;
+  }
+
+  #detail-image img{
+    width: 100%;
+  }
+
+  #map{
+    margin: 0;
+    max-width: 100%;
+  }
+
+  .detail-body-contents{
+    padding-top: 6rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  #map{
+    margin-bottom: 2rem;
+  }
+  
+  .detail-body-contents .venue-info div{
+    padding: 0.5em;
+    text-align: center;
+  }
+}
+
+@media screen and (max-width: 912px){
+  .product-image{
+    display: flex;
+    justify-content: center;
+  }
+    
+  .product-summary > div:first-child{
+    margin-top: 1em;
+    margin-bottom: 3em;
+  }
+
+  #detail-image img{
+    width: 100%;
+  }
+
+  #map{
+    max-width: 100%;
+  }
+
+  .detail-body-contents{
+    padding-top: 6rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  #map{
+    margin: 0;
+    margin-bottom: 2rem;
+  }
+  
+  .detail-body-contents .venue-info div{
+    text-align: center;
+    padding: 0.5em;
+  }
+}
