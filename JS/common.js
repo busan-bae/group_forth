@@ -79,6 +79,28 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // 검색어 추가
+    // 검색창 열기/닫기
+    searchButton.addEventListener("click", function () {
+        isSearchOpen = !isSearchOpen;
+        if (isSearchOpen) {
+          searchWrap.style.display = "block";
+        } else {
+          searchWrap.style.display = "none";
+        }
+      });
+
+    // 검색창 외부 클릭 시 닫기
+    searchWrap.addEventListener("click", function (event) {
+        if (event.target === searchWrap) {
+            isSearchOpen = false;
+            searchWrap.style.display = "none";
+            setTimeout(() => {
+                searchWrap.style.display = "none";
+            }, 500);
+        }
+    });
+
+    // 검색어 추가
     addButton.addEventListener("click", function () {
         let keyword = searchInput.value.trim();
         if (keyword === "") return;

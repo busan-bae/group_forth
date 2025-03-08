@@ -6,8 +6,8 @@ const perfID = urlParams.get("id");
 const showStatus = document.querySelector(".now-showing");
 const detailNav = document.querySelectorAll(".detail-nav div");
 const underLine = document.getElementById("underline");
-const likeButton = document.querySelector(".fa-heart");
-const bookButton = document.querySelector(".book");
+let likeButton = document.querySelector(".fa-heart");
+let bookButton = document.querySelector(".book");
 const detailImage = document.querySelector("#detail-image");
 const mapInfo = document.querySelector("#map");
 const venueInfo = document.querySelector(".venue-info");
@@ -17,8 +17,26 @@ let mapArray = [];
 let mapObject = {};
 let perfStates = [];
 
-likeButton.addEventListener("click", (event) => likeToggle(event));
-bookButton.addEventListener("click", (event) => bookToggle(event));
+document.addEventListener("DOMContentLoaded", () => {
+  likeButton = document.querySelector(".fa-heart");
+  bookButton = document.querySelector(".book");
+
+  if (likeButton) {
+    likeButton.addEventListener("click", (event) => likeToggle(event));
+  }
+
+  if (bookButton) {
+    bookButton.addEventListener("click", (event) => bookToggle(event));
+  }
+});
+
+function getLikeButton() {
+  return document.querySelector(".fa-heart");
+}
+
+function getBookButton() {
+  return document.querySelector(".book");
+}
 
 // underline 빼고 이벤트리스너 추가
 for (let i = 1; i < detailNav.length; i++) {
@@ -360,8 +378,8 @@ const renderMapError = (errorMessage) => {
 getPerfDetail();
 
 export {
-  likeButton,
-  bookButton,
+  getLikeButton,
+  getBookButton,
   perfStates,
   likeToggle,
   bookToggle,

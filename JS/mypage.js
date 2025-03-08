@@ -2,8 +2,6 @@ import {
   perfStates,
   getBookedPerformances,
   getLikedPerformances,
-  likeToggle,
-  bookToggle,
 } from "./detail.js";
 
 const profileItem = document.querySelectorAll(".profile-item");
