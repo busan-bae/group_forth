@@ -8,9 +8,11 @@ const likeButton = document.querySelector(".fa-heart");
 const bookButton = document.querySelector(".book");
 const detailImage = document.querySelector("#detail-image");
 const mapInfo = document.querySelector("#map");
+const venueInfo = document.querySelector(".venue-info");
 
 let perfInfo = [];
 let mapArray = [];
+let mapObject = {};
 let perfStates = [];
 
 likeButton.addEventListener("click", (event) => likeToggle(event));
@@ -114,7 +116,8 @@ const getMapInfo = async () => {
     }
 
     const data = await response.json();
-    console.log(data);
+    mapObject = data.meta.same_name;
+    console.log(mapObject);
   } catch (error) {
     console.error("API 오류 발생:", error);
   }
@@ -123,30 +126,57 @@ const getMapInfo = async () => {
 };
 
 //지도 렌더
-const renderMap = () => {
-  var container = document.getElementById("map"); //지도를 담을 영역의 DOM 레퍼런스
+const renderMap = async () => {
+  //키워드 검색결과로 다시 호출해서 좌표값 받아오기
+  const url = new URL("https://dapi.kakao.com/v2/local/search/keyword.json");
+  url.searchParams.append("query", `${mapObject.selected_region}`);
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        Authorization: `KakaoAK ${restApiKey}`,
+        "Content-Type": "application/json",
+      },
+    });
 
-  var options = {
-    //지도를 생성할 때 필요한 기본 옵션
-    center: new kakao.maps.LatLng(33.450701, 126.570667), //지도의 중심좌표.
-    level: 3, //지도의 레벨(확대, 축소 정도)
-  };
+    if (!response.ok) {
+      throw new Error(`HTTP 오류: ${response.status}`);
+    }
 
-  var map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
+    const data = await response.json();
+    mapArray = data.documents;
+    console.log(mapArray);
+    const xAxis = Number(mapArray[0].x);
+    const yAxis = Number(mapArray[0].y);
+    // console.log(xAxis, yAxis);
 
-  // 마커가 표시될 위치입니다
-  var markerPosition = new kakao.maps.LatLng(33.450701, 126.570667);
+    var container = document.getElementById("map"); //지도를 담을 영역의 DOM 레퍼런스
 
-  // 마커를 생성합니다
-  var marker = new kakao.maps.Marker({
-    position: markerPosition,
-  });
+    var options = {
+      //지도를 생성할 때 필요한 기본 옵션
+      center: new kakao.maps.LatLng(yAxis, xAxis), //지도의 중심좌표.
+      level: 3, //지도의 레벨(확대, 축소 정도)
+    };
 
-  // 마커가 지도 위에 표시되도록 설정합니다
-  marker.setMap(map);
+    var map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
 
-  // 아래 코드는 지도 위의 마커를 제거하는 코드입니다
-  // marker.setMap(null);
+    // 마커가 표시될 위치입니다
+    var markerPosition = new kakao.maps.LatLng(yAxis, xAxis);
+
+    // 마커를 생성합니다
+    var marker = new kakao.maps.Marker({
+      position: markerPosition,
+    });
+
+    // 마커가 지도 위에 표시되도록 설정합니다
+    marker.setMap(map);
+
+    //공연장 정보 텍스트
+    const mapInfoHTML = `<div>${mapArray[0].place_name}</div><div>전화번호 : ${mapArray[0].phone}</div><div>주소 : ${mapArray[0].road_address_name}</div>`;
+    venueInfo.innerHTML = mapInfoHTML;
+  } catch (error) {
+    console.error("API 오류 발생:", error);
+  }
 };
 
 //공연 상세정보 화면에 보여주기
@@ -223,10 +253,12 @@ const filter = (event) => {
   if (tab === "공연 소개") {
     detailImage.style.display = "block";
     mapInfo.style.display = "none";
+    venueInfo.style.display = "none";
     getPerfDetail();
   } else if (tab === "공연 장소") {
     detailImage.style.display = "none";
     mapInfo.style.display = "block";
+    venueInfo.style.display = "block";
     getMapInfo();
   }
 };
