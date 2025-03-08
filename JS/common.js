@@ -1,6 +1,3 @@
-
-// export const imgRoot = "./images/";
-
 // import {imgRoot} from "./mypage.js";
 
 // console.log(imgRoot); 
