@@ -4,8 +4,8 @@ const perfID = `PF260542`;
 const showStatus = document.querySelector(".now-showing");
 const detailNav = document.querySelectorAll(".detail-nav div");
 const underLine = document.getElementById("underline");
-const likeButton = document.querySelector(".fa-heart");
-const bookButton = document.querySelector(".book");
+let likeButton = document.querySelector(".fa-heart");
+let bookButton = document.querySelector(".book");
 const detailImage = document.querySelector("#detail-image");
 const mapInfo = document.querySelector("#map");
 const venueInfo = document.querySelector(".venue-info");
@@ -15,8 +15,26 @@ let mapArray = [];
 let mapObject = {};
 let perfStates = [];
 
-likeButton.addEventListener("click", (event) => likeToggle(event));
-bookButton.addEventListener("click", (event) => bookToggle(event));
+document.addEventListener("DOMContentLoaded", () => {
+  likeButton = document.querySelector(".fa-heart");
+  bookButton = document.querySelector(".book");
+
+  if (likeButton) {
+    likeButton.addEventListener("click", (event) => likeToggle(event));
+  }
+
+  if (bookButton) {
+    bookButton.addEventListener("click", (event) => bookToggle(event));
+  }
+});
+
+function getLikeButton() {
+  return document.querySelector(".fa-heart");
+}
+
+function getBookButton() {
+  return document.querySelector(".book");
+}
 
 // underline 빼고 이벤트리스너 추가
 for (let i = 1; i < detailNav.length; i++) {
@@ -121,7 +139,6 @@ const getMapInfo = async () => {
     console.log(mapObject);
   } catch (error) {
     console.error("API 오류 발생:", error);
-    renderError(error.message);
   }
 
   renderMap();
@@ -178,6 +195,7 @@ const renderMap = async () => {
     venueInfo.innerHTML = mapInfoHTML;
   } catch (error) {
     console.error("API 오류 발생:", error);
+    renderMapError(error.message);
   }
 };
 
@@ -343,19 +361,23 @@ const getBookedPerformances = () => perfStates.filter((perf) => perf.isBooked);
 //에러 화면 표시
 const renderError = (errorMessage) => {
   document.querySelector(
+    "#perf-detail"
+  ).innerHTML = `<div class="alert alert-light" role="alert" style="text-align: center;">
+  ${errorMessage}</div>`;
+};
+
+const renderMapError = (errorMessage) => {
+  document.querySelector(
     ".detail-body-contents"
   ).innerHTML = `<div class="alert alert-light" role="alert" style="text-align: center;">
   ${errorMessage}</div>`;
-  document.querySelector("#perf-detail").innerHTML = document.querySelector(
-    ".detail-body-contents"
-  ).innerHTML;
 };
 
 getPerfDetail();
 
 export {
-  likeButton,
-  bookButton,
+  getLikeButton,
+  getBookButton,
   perfStates,
   likeToggle,
   bookToggle,

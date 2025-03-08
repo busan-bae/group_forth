@@ -4,14 +4,6 @@
   font-weight: 400;
   font-style: normal;
 }
-.my-header {
-  border: 3px solid red;
-  height: 70px;
-}
-.my-footer {
-  border: 3px solid red;
-  height: 100px;
-}
 
 .profile-area {
   display: flex;
