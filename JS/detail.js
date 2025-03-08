@@ -1,6 +1,8 @@
 const apiKey = `d98d9402f26042ed994300072acd892e`;
 const restApiKey = `c3f79e7f06bdb2e3b71716ee7890461e`;
-const perfID = `PF260542`;
+const urlParams = new URLSearchParams(window.location.search);
+const perfID = urlParams.get("id");
+// const perfID = `PF260542`;
 const showStatus = document.querySelector(".now-showing");
 const detailNav = document.querySelectorAll(".detail-nav div");
 const underLine = document.getElementById("underline");
@@ -121,7 +123,6 @@ const getMapInfo = async () => {
     console.log(mapObject);
   } catch (error) {
     console.error("API 오류 발생:", error);
-    renderError(error.message);
   }
 
   renderMap();
@@ -178,6 +179,7 @@ const renderMap = async () => {
     venueInfo.innerHTML = mapInfoHTML;
   } catch (error) {
     console.error("API 오류 발생:", error);
+    renderMapError(error.message);
   }
 };
 
@@ -343,12 +345,16 @@ const getBookedPerformances = () => perfStates.filter((perf) => perf.isBooked);
 //에러 화면 표시
 const renderError = (errorMessage) => {
   document.querySelector(
+    "#perf-detail"
+  ).innerHTML = `<div class="alert alert-light" role="alert" style="text-align: center;">
+  ${errorMessage}</div>`;
+};
+
+const renderMapError = (errorMessage) => {
+  document.querySelector(
     ".detail-body-contents"
   ).innerHTML = `<div class="alert alert-light" role="alert" style="text-align: center;">
   ${errorMessage}</div>`;
-  document.querySelector("#perf-detail").innerHTML = document.querySelector(
-    ".detail-body-contents"
-  ).innerHTML;
 };
 
 getPerfDetail();
