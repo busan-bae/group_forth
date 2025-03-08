@@ -1,17 +1,17 @@
 const apiKey = `d98d9402f26042ed994300072acd892e`;
+const restApiKey = `c3f79e7f06bdb2e3b71716ee7890461e`;
 const perfID = `PF260542`;
 const showStatus = document.querySelector(".now-showing");
 const detailNav = document.querySelectorAll(".detail-nav div");
 const underLine = document.getElementById("underline");
 const likeButton = document.querySelector(".fa-heart");
 const bookButton = document.querySelector(".book");
+const detailImage = document.querySelector("#detail-image");
+const mapInfo = document.querySelector("#map");
 
 let perfInfo = [];
-let perfState = {
-  perfID: perfID,
-  isBooked: false,
-  isLiked: false,
-};
+let mapArray = [];
+let perfStates = [];
 
 likeButton.addEventListener("click", (event) => likeToggle(event));
 bookButton.addEventListener("click", (event) => bookToggle(event));
@@ -88,27 +88,65 @@ const getPerfDetail = async () => {
           ) || [], //공연 상세정보 이미지 여러개 가져오기
       },
     ];
-
-    //넘겨줄 공연정보
-    perfState = {
-      perfID: perfDB.getElementsByTagName("mt20id")[0]?.textContent || "",
-      name: perfDB.getElementsByTagName("prfnm")[0]?.textContent || "",
-      status: perfDB.getElementsByTagName("prfstate")[0]?.textContent || "",
-      poster: perfDB.getElementsByTagName("poster")[0]?.textContent || "",
-      isBooked: false,
-      isLiked: false,
-    };
   } catch (error) {
     console.error("오류 발생:", error.message);
-    // renderError(error.message); // 화면에 에러 표시하는 함수 (이따 구현해야댐)
   }
 
   renderDetail();
 };
 
-//지도 api 호출
-const getMapInfo = () => {
-  console.log("지도 불러오기");
+//지도 api 호츌
+const getMapInfo = async () => {
+  const url = new URL("https://dapi.kakao.com/v2/local/search/keyword.json");
+  url.searchParams.append("query", `${perfInfo[0].venue}`);
+
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        Authorization: `KakaoAK ${restApiKey}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP 오류: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log(data);
+  } catch (error) {
+    console.error("API 오류 발생:", error);
+  }
+
+  renderMap();
+};
+
+//지도 렌더
+const renderMap = () => {
+  var container = document.getElementById("map"); //지도를 담을 영역의 DOM 레퍼런스
+
+  var options = {
+    //지도를 생성할 때 필요한 기본 옵션
+    center: new kakao.maps.LatLng(33.450701, 126.570667), //지도의 중심좌표.
+    level: 3, //지도의 레벨(확대, 축소 정도)
+  };
+
+  var map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
+
+  // 마커가 표시될 위치입니다
+  var markerPosition = new kakao.maps.LatLng(33.450701, 126.570667);
+
+  // 마커를 생성합니다
+  var marker = new kakao.maps.Marker({
+    position: markerPosition,
+  });
+
+  // 마커가 지도 위에 표시되도록 설정합니다
+  marker.setMap(map);
+
+  // 아래 코드는 지도 위의 마커를 제거하는 코드입니다
+  // marker.setMap(null);
 };
 
 //공연 상세정보 화면에 보여주기
@@ -176,15 +214,19 @@ const renderDetail = () => {
 
   document.querySelector("#perf-title").innerHTML = titleHTML;
   document.querySelector("#perf-detail").innerHTML = detailHTML;
-  document.querySelector("#detail-contents").innerHTML = detailPicHTML.join("");
+  detailImage.innerHTML = detailPicHTML.join("");
 };
 
 //탭에 따라서 정보 필터링
 const filter = (event) => {
   const tab = event.target.textContent;
   if (tab === "공연 소개") {
+    detailImage.style.display = "block";
+    mapInfo.style.display = "none";
     getPerfDetail();
   } else if (tab === "공연 장소") {
+    detailImage.style.display = "none";
+    mapInfo.style.display = "block";
     getMapInfo();
   }
 };
@@ -202,42 +244,74 @@ const toggleTabs = (event) => {
   }
 };
 
+//찜 상태 및 예매상태 업데이트
+const updatePerfState = (id, key, value) => {
+  const index = perfStates.findIndex((perf) => perf.perfID === id); //배열에 있는지 확인
+  if (index !== -1) {
+    perfStates[index][key] = value; //기존 공연인 경우 상태 업데이트
+  } else {
+    perfStates.push({
+      //새 공연인 경우 배열에 push
+      perfID: id,
+      isLiked: key === "isLiked" ? value : false,
+      isBooked: key === "isBooked" ? value : false,
+    });
+  }
+};
+
 //공연 찜하기 기능
 const likeToggle = (event) => {
   const heart = event.target;
+  const id = perfInfo[0]?.id;
+
+  if (!id) return;
 
   //하트 활성화 토글
   if (heart.classList.contains("fa-regular")) {
     heart.classList.remove("fa-regular");
     heart.classList.add("fa-solid");
     heart.style.color = "red";
-    perfState.isLiked = true;
+    updatePerfState(id, "isLiked", true);
   } else {
     heart.classList.remove("fa-solid");
     heart.classList.add("fa-regular");
     heart.style.color = ""; // 색상 초기화
-    perfState.isLiked = false;
+    updatePerfState(id, "isLiked", false);
   }
 
-  console.log(perfState);
+  console.log(perfStates);
 };
 
 //예매하기
 const bookToggle = (event) => {
   const button = event.target;
+  const id = perfInfo[0]?.id;
+
+  if (!id) return;
+
   button.classList.toggle("is-complete");
 
   if (button.classList.contains("is-complete")) {
     button.innerText = "예매 완료";
-    perfState.isBooked = true;
+    updatePerfState(id, "isBooked", true);
   } else {
     button.innerText = "예매하기";
-    perfState.isBooked = false;
+    updatePerfState(id, "isBooked", false);
   }
 
-  console.log(perfState);
+  console.log(perfStates);
 };
+
+//찜한 공연 및 예매된 공연 필터링
+const getLikedPerformances = () => perfStates.filter((perf) => perf.isLiked);
+const getBookedPerformances = () => perfStates.filter((perf) => perf.isBooked);
 
 getPerfDetail();
 
-export { likeToggle, bookToggle, perfState };
+export {
+  perfStates,
+  likeToggle,
+  bookToggle,
+  getLikedPerformances,
+  getBookedPerformances,
+};
