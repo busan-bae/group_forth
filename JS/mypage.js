@@ -1,10 +1,13 @@
+// import { perfStates, getBookedPerformances, getLikedPerformances } from "./detail.js";
+
 const profileItem = document.querySelectorAll(".profile-item");
 const profileInfo = document.querySelectorAll(".profile-info div");
 const pencilIcon = document.querySelectorAll(".profile i");
 const profileIMG = document.querySelector(".profile-img");
 const inputFile = document.getElementById("input-file");
+const carouselItem = document.querySelectorAll(".carousel-item img");
 const apiKey = "d98d9402f26042ed994300072acd892e";
-let perfID = "";
+let perfAddress = "";
 const myProfile = {
   // 프로필 객체
   name: "코알누",
@@ -60,12 +63,21 @@ inputFile.addEventListener("change", () => {
   };
 });
 
-const getPerfInfo = async () => {
+const getPerfInfo = async (perfID) => {
   const proxy = "https://cors-anywhere.herokuapp.com/";
   const url = new URL(`http://kopis.or.kr/openApi/restful/pblprfr/${perfID}?service=${apiKey}`);
   const response = await fetch(proxy + url);
   const text = await response.text();
   const xml = new DOMParser().parseFromString(text, "application/xml");
+  const perfDB = xml.getElementsByTagName("db")[0];
+  perfAddress = perfDB.getElementsByTagName("poster")[0].textContent;
+  carouselItem[0].src = perfAddress;
+  carouselItem[1].src = perfAddress;
+  carouselItem[2].src = perfAddress;
+  carouselItem[3].src = perfAddress;
+  carouselItem[4].src = perfAddress;
+  carouselItem[5].src = perfAddress;
+  carouselItem[6].src = perfAddress;
 };
 
 // 공통된 유효성 체크 항목
@@ -230,4 +242,5 @@ for(let i = 0; i <= 3; i++) { // 로컬 스토리지에 저장되어있는 객�
 }
 profileIMG.style.backgroundImage = `url(${window.localStorage.getItem("imgAdress")})`; // 프로필 이미지 렌더
 
-getPerfInfo();
+getPerfInfo("PF260542");
+// console.log(getLikedPerformances());
