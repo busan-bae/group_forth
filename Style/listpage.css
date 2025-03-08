@@ -24,8 +24,10 @@
   }
 
 .head-background {
-    width: 100vw;
-    background-color: #eaeaea;
+    width: 100%;
+    /* background-image:url(https://png.pngtree.com/thumb_back/fh260/background/20231222/pngtree-white-paper-texture-background-image_15528216.jpg); */
+    /* background-repeat: no-repeat; */
+    /* background-size: cover; */
     text-align: center;
     padding-top: 5em;
     padding-bottom: 5em;
@@ -39,40 +41,36 @@
     display: flex;
     height: 2.5em;
     align-items: center;
+    justify-content: center;
     margin-bottom: 3em;
 }
 
 .icon-box {
-    background-color: #A6A6A6;
+    background-color: #D5D5D5;
     height: 100%;
-    display: flex;
-    align-items: center;
-    padding-right: 4px;
-    padding-left: 4px;
+    /* display: flex; */
+    justify-content:space-between;
+    padding-right: 3px;
+    padding-left: 3px;
 }
 
 
 .main-filter select {
-    width: 30%;
+    width: 20vw;
     height: 100%;
     font-size: 1em;
     background-color: #D5D5D5;
     border: none;
+    margin-right: 10px;
 }
 
 .list-area { 
     margin-top: 8em;
 }
 
-.date-filer {
-    background-color: #D5D5D5;
-}
 
-.pagination {
-    justify-content: center;
-    margin-top: 100px;
-    cursor: none;
-}
+
+
 
 /* 공통 list */
 .list-txt{padding:10px 0;}
@@ -83,7 +81,6 @@
 .list-item .place{font-size:14px;}
 .list-item .date{font-size:14px;}
 .list-txt p{line-height: 22px;}
-
 .tit {
     text-align: center;
 }
@@ -96,7 +93,7 @@
 .tit-bx button {
     position: absolute;
     top: 10px;
-    right: 10px;
+    right: 1px;
     transform: translateY(-50%);
     background: transparent;
     border: none;
@@ -104,7 +101,51 @@
 }
 
 .list-title {
-    font-weight: 700;
-    font-size: 4em;
+    font-weight: 600;
+    font-size: 3em;
     letter-spacing: 10px;
 }
+
+.list-img a {
+    width: 100%;
+    display: block;
+    height: 100%;}
+
+.link-to-detail {width:100%
+}
+
+
+.pagination {
+    justify-content: center;
+    margin-top: 10em;
+    margin-bottom: 10em;
+    border: none;
+    color: #00A9FF;
+}
+
+.pagination a {
+    border-radius: 5px;
+
+}
+
+
+.page-link {
+    border : none;
+    color: #000;
+    font-size: 1em;
+}
+
+
+  
+/*  
+  .pagination a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+  }
+
+  .pagination a.active {
+    background-color: #4CAF50;
+    color: white;} */
+

@@ -1,6 +1,8 @@
 const apiKey = `d98d9402f26042ed994300072acd892e`;
 const restApiKey = `c3f79e7f06bdb2e3b71716ee7890461e`;
-const perfID = `PF260542`;
+const urlParams = new URLSearchParams(window.location.search);
+const perfID = urlParams.get("id");
+// const perfID = `PF260542`;
 const showStatus = document.querySelector(".now-showing");
 const detailNav = document.querySelectorAll(".detail-nav div");
 const underLine = document.getElementById("underline");
