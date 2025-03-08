@@ -123,9 +123,9 @@ const render = (performancesToRender, containerClass) => {
   }
 };
 // 데이터 요청 실행
-fetchKopisData("prffest?stdate=20250301&eddate=20250330&cpage=1&rows=10", ".mainsl-bx");
-fetchKopisData("pblprfr?&stdate=20230601&eddate=20260808&cpage=1&rows=10&prfstate=02", ".main-cont-bx");
-fetchKopisData("prfawad?stdate=20230601&eddate=20230630&cpage=1&rows=10&prfstate=03", ".award-wrap");
+fetchKopisData("pblprfr?stdate=20250301&eddate=20250330&cpage=1&rows=10", ".mainsl-bx");
+fetchKopisData("pblprfr?&stdate=20230601&eddate=20260808&cpage=1&rows=10&prfstate=02&shcate=GGGA", ".main-cont-bx");
+fetchKopisData("pblprfr?stdate=20230601&eddate=20230630&cpage=1&rows=10&prfstate=02&shcate=AAA", ".award-wrap");
 fetchKopisData("pblprfr?&stdate=20230601&eddate=20260808&cpage=1&rows=10&prfstate=02", ".mdate-cont");
 
 
@@ -197,80 +197,92 @@ const filterPerformancesByDate = (selectedDate) => {
     });
 };
 
-/* s : 메인슬라이드(.mainsl-area) 스와이퍼 */
-var mainslSwiper = new Swiper(".mainsl-area", {
-    slidesPerView: 1,
-    spaceBetween: 0,
-    autoplay: {
-        delay: 3000,
-        disableOnInteraction: false,
-    },
-    pagination: {
-        el: ".swiper-pagination",
-        clickable: true,
-    },
-    breakpoints: {
-        768: {
-            slidesPerView: 2,
-            spaceBetween: 20,
-        },
-        1024: {
-            slidesPerView: 3,
-            spaceBetween: 20,
-        },
-    },
-});
-/* e : 메인 슬라이드 스와이퍼 */
+const mdateBtn = document.querySelector(".mdat-btn");
+const mdateCont = document.querySelector(".mdate-cont");
 
-/* s : 메인1 스와이퍼 */
-var mainCont1Swiper = new Swiper(".main-cont-area", {
-    slidesPerView: 1,
-    spaceBetween: 20,
-    navigation: {
-        nextEl: ".swiper-button-next",
-        prevEl: ".swiper-button-prev",
-    },
-    breakpoints: {
-        500: {
-            slidesPerView: 2,
-            spaceBetween: 20,
-        },
-        768: {
-            slidesPerView: 3,
-            spaceBetween: 0,
-        },
-        1024: {
-            slidesPerView: 4,
-            spaceBetween: 0,
-        },
-        1400: {
-            slidesPerView: 4,
-            spaceBetween: 0,
-        },
-    },
-});
-/* e : 메인 슬라이드 스와이퍼 */
-
-/* s : 날짜 스와이퍼 */
-var mdateSwiper = new Swiper(".main-date-area", {
-    slidesPerView: 5,
-    spaceBetween: 10,
-    pagination: {
-        el: ".swiper-pagination",
-        clickable: true,
-    },
-    breakpoints: {
-        768: {
-            slidesPerView: 7,
-            spaceBetween: 20,
-        },
-        1024: {
-            slidesPerView: 12,
-            spaceBetween: 20,
-        },
-    },
-});
-/* e : 날짜 스와이퍼 */
-
-// 페이지가 로드될 때, 기본적으로 날짜 버튼 생성
+mdateBtn.addEventListener("click",function(){
+    if (mdateCont.classList.contains("active")) {
+        mdateCont.classList.remove("active");
+        mdateBtn.classList.remove("active");
+        mdateBtn.textContent = "더보기";
+      } else {
+        mdateCont.classList.add("active");
+        mdateBtn.classList.add("active");
+        mdateBtn.textContent = "숨기기";
+      }
+})
 addDate();
+// Swiper 인스턴스를 전역 변수로 선언
+var mainslSwiper = null;
+var mainCont1Swiper = null;
+var mdateSwiper = null;
+
+// Swiper 초기화 함수
+function initSwipers() {
+    // 기존 Swiper 삭제 (중복 실행 방지)
+    if (mainslSwiper instanceof Swiper) mainslSwiper.destroy(true, true);
+    if (mainCont1Swiper instanceof Swiper) mainCont1Swiper.destroy(true, true);
+    if (mdateSwiper instanceof Swiper) mdateSwiper.destroy(true, true);
+
+    // 메인 슬라이드 Swiper
+    mainslSwiper = new Swiper(".mainsl-area", {
+        slidesPerView: 1,
+        spaceBetween: 0,
+        autoplay: { delay: 3000, disableOnInteraction: false },
+        pagination: { el: ".swiper-pagination", clickable: true },
+        observer: true, observeParents: true,
+        breakpoints: { 768: { slidesPerView: 2, spaceBetween: 20 }, 1024: { slidesPerView: 3, spaceBetween: 20 } }
+    });
+
+    // 메인1 Swiper
+    mainCont1Swiper = new Swiper(".main-cont-area", {
+        slidesPerView: 1, spaceBetween: 20,
+        navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" },
+        observer: true, observeParents: true,
+        breakpoints: { 500: { slidesPerView: 2 }, 768: { slidesPerView: 3 }, 1024: { slidesPerView: 4 }, 1400: { slidesPerView: 4 } }
+    });
+
+    // 날짜 Swiper
+    mdateSwiper = new Swiper(".main-date-area", {
+        slidesPerView: 5, spaceBetween: 10,
+        pagination: { el: ".swiper-pagination", clickable: true },
+        observer: true, observeParents: true,
+        breakpoints: { 768: { slidesPerView: 7 }, 1024: { slidesPerView: 12 } }
+    });
+
+    // Swiper가 초기화된 후 update 및 autoplay 재시작
+    setTimeout(() => {
+        if (mainslSwiper instanceof Swiper) mainslSwiper.update();
+        if (mainCont1Swiper instanceof Swiper) mainCont1Swiper.update();
+        if (mdateSwiper instanceof Swiper) mdateSwiper.update();
+
+        if (mainslSwiper?.autoplay) mainslSwiper.autoplay.start();
+        if (mainCont1Swiper?.autoplay) mainCont1Swiper.autoplay.start();
+        if (mdateSwiper?.autoplay) mdateSwiper.autoplay.start();
+    }, 100);
+}
+
+// 페이지 로드 후 Swiper 초기화
+document.addEventListener("DOMContentLoaded", initSwipers);
+
+// 창 크기 변경 시 Swiper 업데이트
+const swiperContainer = document.querySelector(".main-total-wrap");
+
+const resizeObserver = new ResizeObserver(entries => {
+    for (let entry of entries) {
+        console.log(`너비 변경 감지: ${entry.contentRect.width}px`);
+        
+        // Swiper 인스턴스가 존재할 경우에만 update() 실행
+        if (mainslSwiper instanceof Swiper) mainslSwiper.update();
+        if (mainCont1Swiper instanceof Swiper) mainCont1Swiper.update();
+        if (mdateSwiper instanceof Swiper) mdateSwiper.update();
+    }
+});
+
+// Swiper 컨테이너 크기 변경 감지 시작
+resizeObserver.observe(swiperContainer);
+
+
+// import { likeToggle } from './detail.js';
+
+// likeToggle();
