@@ -10,7 +10,6 @@ body {line-height: 1; color: #000;}
     justify-content: center;
     height: 94px;
 }
-
 .header .header-inner {
     width: 100%;
     max-width: 1440px;
@@ -21,6 +20,10 @@ body {line-height: 1; color: #000;}
 }
 .header .logo {
     flex: 1; 
+}
+.header .logo a{
+    display: block;
+    width: 130px;
 }
 .header .gnb {
     flex: 2;
@@ -40,7 +43,6 @@ body {line-height: 1; color: #000;}
     justify-content: flex-end; 
     cursor: pointer;
 }
-
 .header .util-area .search-area{
     padding: 20px;
 }
@@ -79,9 +81,7 @@ body {line-height: 1; color: #000;}
     background: #ddd;
     background: #fff;
     z-index: 100;
-    display: flex;
     flex-direction: column;
-    opacity: 0;
     transition: opacity 0.5s ease-in-out;
 }
 .inner{
@@ -136,17 +136,15 @@ body {line-height: 1; color: #000;}
     font-size: 18px;
     cursor: pointer;
     color: red;
-
 }
 .search-wrap section{
     margin-top: 100px;
+    height: 200px;
 }
 .search-wrap section h2{
     font-size: 40px;
     margin-bottom: 40px;
 }
-
-
 /* footer */
 .footer {
     position: relative;
@@ -178,6 +176,7 @@ body {line-height: 1; color: #000;}
     height: 1px;
 }
 .footer .nav-area {
+    width :100%;
     position: relative;
     height: 44px;
     line-height: 44px;
@@ -220,7 +219,6 @@ body {line-height: 1; color: #000;}
     width: 100%;
 }
 .footer .footer-bottom .wrap{
-    width: 450px;
     color: #999;
     font-size: 12px;
     line-height: 16px;
@@ -281,9 +279,13 @@ body {line-height: 1; color: #000;}
     text-decoration: underline;
 }
 
+
 @media (max-width: 767px){
     .header {height: 64px;}
-    .header .logo {flex: inherit; width: 120px;}
+    .header .logo {}
+    .header .logo a{
+        flex: inherit; width: 120px;
+    }
     .header .header-inner {padding: 20px;}
     .header .gnb {display: none;}
     .header .util-area {
@@ -336,12 +338,8 @@ body {line-height: 1; color: #000;}
         top: 0;
         right: 0;
         background: #fff;
-        /* background: #eee; */
-        /* background: #fff; */
         overflow-x: hidden;
         transition: 0.5s;
-        /* padding-top: 60px; */
-   
       }
 
       .side-menu .menu-logo {
