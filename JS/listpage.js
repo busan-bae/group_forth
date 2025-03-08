@@ -181,7 +181,7 @@ const renderPage = (page) => {
       <div class="col">
           <div class="list-item">
             <div class="list-img">
-                <a href="detail.html?id=${performance.mt20id['#text']}"><img class="link-to-detail" src="${performance.poster['#text']}" alt="공연이미지" data-id="${performance.mt20id['#text']}"></a>
+                <a href="../html/detail.html?id=${performance.mt20id['#text']}"><img class="link-to-detail" src="${performance.poster['#text']}" alt="공연이미지" data-id="${performance.mt20id['#text']}"></a>
             </div>
             <div class="list-txt">
                 <div class="tit-bx">
@@ -278,7 +278,9 @@ const changePage = (page) => {
   renderPage(currentPage);
 };
 
-// import { likeToggle, bookToggle, perfState } from "./detail.js"
+// import { perfState } from "./detail.js"
+
+// console.log
 
     
     // if (!id) return;
