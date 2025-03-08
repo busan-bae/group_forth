@@ -341,6 +341,8 @@ const getBookedPerformances = () => perfStates.filter((perf) => perf.isBooked);
 getPerfDetail();
 
 export {
+  likeButton,
+  bookButton,
   perfStates,
   likeToggle,
   bookToggle,
