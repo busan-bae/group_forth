@@ -3,6 +3,8 @@ const profileInfo = document.querySelectorAll(".profile-info div");
 const pencilIcon = document.querySelectorAll(".profile i");
 const profileIMG = document.querySelector(".profile-img");
 const inputFile = document.getElementById("input-file");
+const apiKey = "d98d9402f26042ed994300072acd892e";
+let perfID = "";
 const myProfile = {
   // 프로필 객체
   name: "코알누",
@@ -57,6 +59,14 @@ inputFile.addEventListener("change", () => {
     window.localStorage.setItem("imgAdress", imgRoot);
   };
 });
+
+const getPerfInfo = async () => {
+  const proxy = "https://cors-anywhere.herokuapp.com/";
+  const url = new URL(`http://kopis.or.kr/openApi/restful/pblprfr/${perfID}?service=${apiKey}`);
+  const response = await fetch(proxy + url);
+  const text = await response.text();
+  const xml = new DOMParser().parseFromString(text, "application/xml");
+};
 
 // 공통된 유효성 체크 항목
 const trueCheck = (index, key) => {
@@ -219,3 +229,5 @@ for(let i = 0; i <= 3; i++) { // 로컬 스토리지에 저장되어있는 객�
   }
 }
 profileIMG.style.backgroundImage = `url(${window.localStorage.getItem("imgAdress")})`; // 프로필 이미지 렌더
+
+getPerfInfo();
