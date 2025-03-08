@@ -85,14 +85,14 @@ const render = (performancesToRender, containerClass) => {
 
     // 메인 슬라이드 HTML 생성
     mainslHTML = performancesToRender.map(item => `
-        <div class="swiper-slide mainsl">
+        <div class="swiper-slide mainsl"><a href="">
             <div class="mainsl-img"><img src="${item.poster['#text']}" alt="공연포스터"></div>
             <div class="mainsl-txt">
                 <p class="tit">${item.prfnm['#text']}</p>
                 <p class="place">${item.fcltynm['#text']}</p>
                 <p class="date">${item.prfpdfrom['#text']} ~ ${item.prfpdto['#text']}</p>
             </div>
-        </div>
+        </a></div>
     `).join('');
 
     // performances 배열을 순회하면서 HTML 생성
@@ -231,6 +231,7 @@ function initSwipers() {
         autoplay: { delay: 3000, disableOnInteraction: false },
         pagination: { el: ".swiper-pagination", clickable: true },
         observer: true, observeParents: true,
+        watchOverflow: true, 
         breakpoints: { 768: { slidesPerView: 2, spaceBetween: 20 }, 1024: { slidesPerView: 3, spaceBetween: 20 } }
     });
 
@@ -239,6 +240,7 @@ function initSwipers() {
         slidesPerView: 1, spaceBetween: 20,
         navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" },
         observer: true, observeParents: true,
+        watchOverflow: true, 
         breakpoints: { 500: { slidesPerView: 2 }, 768: { slidesPerView: 3 }, 1024: { slidesPerView: 4 }, 1400: { slidesPerView: 4 } }
     });
 
@@ -247,6 +249,7 @@ function initSwipers() {
         slidesPerView: 5, spaceBetween: 10,
         pagination: { el: ".swiper-pagination", clickable: true },
         observer: true, observeParents: true,
+        watchOverflow: true, 
         breakpoints: { 768: { slidesPerView: 7 }, 1024: { slidesPerView: 12 } }
     });
 
@@ -263,24 +266,13 @@ function initSwipers() {
 }
 
 // 페이지 로드 후 Swiper 초기화
-document.addEventListener("DOMContentLoaded", initSwipers);
+//document.addEventListener("DOMContentLoaded", initSwipers);
+window.onload = () => {
+    setTimeout(() => {
+      initSwipers();
+    }, 100);
+  };
 
-// 창 크기 변경 시 Swiper 업데이트
-const swiperContainer = document.querySelector(".main-total-wrap");
-
-const resizeObserver = new ResizeObserver(entries => {
-    for (let entry of entries) {
-        console.log(`너비 변경 감지: ${entry.contentRect.width}px`);
-        
-        // Swiper 인스턴스가 존재할 경우에만 update() 실행
-        if (mainslSwiper instanceof Swiper) mainslSwiper.update();
-        if (mainCont1Swiper instanceof Swiper) mainCont1Swiper.update();
-        if (mdateSwiper instanceof Swiper) mdateSwiper.update();
-    }
-});
-
-// Swiper 컨테이너 크기 변경 감지 시작
-resizeObserver.observe(swiperContainer);
 
 
 // import { likeToggle } from './detail.js';
