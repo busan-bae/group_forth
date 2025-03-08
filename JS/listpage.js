@@ -180,12 +180,14 @@ const renderPage = (page) => {
   container.innerHTML = performancesToRender.map(performance => `
       <div class="col">
           <div class="list-item">
-            <div class="list-img"><a href=""><img class="link-to-detail" src="${performance.poster['#text']}" alt="공연이미지" data-id="${performance.mt20id['#text']}"></a></div>
-                <div class="list-txt">
-                    <div class="tit-bx">
-                        <div class="d-flex justify-content-between>
+            <div class="list-img">
+                <a href="detail.html?id=${performance.mt20id['#text']}"><img class="link-to-detail" src="${performance.poster['#text']}" alt="공연이미지" data-id="${performance.mt20id['#text']}"></a>
+            </div>
+            <div class="list-txt">
+                <div class="tit-bx">
+                        <div class="d-flex justify-content-between">
                             <p class="tit">${performance.prfnm['#text']}</p>
-                            <button><i class="fa-regular fa-heart"></i></button>
+                            <button class="like"><i class="fa-regular fa-heart"></i></button>
                         </div>
                         <p class="place">${performance.fcltynm['#text']}</p>
                     </div>
@@ -277,3 +279,21 @@ const changePage = (page) => {
 };
 
 // import { likeToggle, bookToggle, perfState } from "./detail.js"
+
+    
+    // if (!id) return;
+  
+    // //하트 활성화 토글
+    // if (heart.classList.contains("fa-regular")) {
+    //   heart.classList.remove("fa-regular");
+    //   heart.classList.add("fa-solid");
+    //   heart.style.color = "red";
+    //   updatePerfState(id, "isLiked", true);
+    // } else {
+    //   heart.classList.remove("fa-solid");
+    //   heart.classList.add("fa-regular");
+    //   heart.style.color = ""; // 색상 초기화
+    //   updatePerfState(id, "isLiked", false);
+    // }
+  
+    // console.log(perfStates);}
