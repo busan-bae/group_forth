@@ -85,7 +85,7 @@ const render = (performancesToRender, containerClass) => {
 
     // 메인 슬라이드 HTML 생성
     mainslHTML = performancesToRender.map(item => `
-        <div class="swiper-slide mainsl"><a href="">
+        <div class="swiper-slide mainsl"><a href="./html/detail.html?id=${item.mt20id['#text']}">
             <div class="mainsl-img"><img src="${item.poster['#text']}" alt="공연포스터"></div>
             <div class="mainsl-txt">
                 <p class="tit">${item.prfnm['#text']}</p>
@@ -99,7 +99,7 @@ const render = (performancesToRender, containerClass) => {
     listHTML = performancesToRender.map(item => `
         <div class="swiper-slide list-item-bx">
             <div class="list-item">
-                <div class="list-img"><a href=""><img src="${item.poster['#text']}" alt="공연이미지"></a></div>
+                <div class="list-img"><a href="./html/detail.html?id=${item.mt20id['#text']}"><img src="${item.poster['#text']}" alt="공연이미지"></a></div>
                 <div class="list-txt">
                     <div class="tit-bx">
                         <div class="d-flex justify-content-between">
