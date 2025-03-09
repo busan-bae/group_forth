@@ -101,9 +101,15 @@ const fetchAllPages = async () => {
       renderPage(currentPage); // 첫 페이지 렌더링
       console.log("✅ 모든 페이지에서 가져온 데이터:", allPerformances);
   } catch (error) {
-      console.error("❌ API 요청 중 오류 발생:", error);
+    error()
+    console.error("❌ API 요청 중 오류 발생:", error);
   }
 };
+
+const errorRender = () => {
+    const errorHTML = `?`
+document.getElementById("news-board").innerHTML=errorHTML
+}
 
 // 데이터 가져오기 실행
 fetchAllPages();
@@ -285,12 +291,11 @@ const changePage = (page) => {
   renderPage(currentPage);
 };
 
-// import { perfState } from "./detail.js"
+// imports {perfState} from "../like.js"
 
-// console.log
+// console.log(perfState)ss
 
     
-    // if (!id) return;
   
     // //하트 활성화 토글
     // if (heart.classList.contains("fa-regular")) {
@@ -305,4 +310,3 @@ const changePage = (page) => {
     //   updatePerfState(id, "isLiked", false);
     // }
   
-    // console.log(perfStates);}
