@@ -449,8 +449,8 @@ const getBookedPerformances = () => perfStates.filter((perf) => perf.isBooked);
 const renderError = (errorMessage) => {
   const errorElement = document.querySelector("#perf-detail");
   if (errorElement) {
-    errorElement.innerHTML = <div class="alert alert-light" role="alert" style="text-align: center;">
-  ${errorMessage}</div>;
+    errorElement.innerHTML = `<div class="alert alert-light" role="alert" style="text-align: center;">
+  ${errorMessage}</div>`;
   } else {
     console.error("Error element not found");
   }
