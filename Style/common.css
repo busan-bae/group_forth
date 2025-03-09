@@ -29,11 +29,11 @@ body {line-height: 1; color: #000;}
     flex: 2;
 }
 .header .gnb ul {
-    display: flex;
-    gap: 20px; 
+    display: flex;    justify-content: space-around;
+    /* gap: 20px;  */
 }
 .header .gnb li {
-    flex: 1;
+    /* flex: 1; */
     text-align: center;
     padding: 20px;
 }
@@ -199,7 +199,7 @@ body {line-height: 1; color: #000;}
     color: #333;
 }
 .footer .footer-bottom{
-    display: flex;
+    display: flex; flex-wrap: wrap;
     align-items: center;
 
 }

@@ -13,6 +13,7 @@ const mapInfo = document.querySelector("#map");
 const venueInfo = document.querySelector(".venue-info");
 const venueDetail = document.querySelector(".venue-detail");
 
+
 let perfInfo = [];
 let mapArray = [];
 let mapObject = {};
