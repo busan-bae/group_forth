@@ -97,6 +97,9 @@
 .profile i:hover {
   color: #00a9ff;
 }
+.reservation-area {
+  margin-bottom: 15rem;
+}
 .reservation-area h3 {
   font-weight: 700;
   font-size: 22px;
@@ -109,8 +112,27 @@
   justify-content: center;
   align-items: center;
 }
+.reservation-list img {
+  height: 200px;
+  margin-top: 15rem;
+  margin-right: 1rem;
+  margin-left: 1rem;
+}
+.perf-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+.perf-info {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
 .liked-area {
   margin: 5rem 0;
+  margin-bottom: 8rem;
 }
 .liked-area h3 {
   font-weight: 700;
@@ -124,42 +146,32 @@
   justify-content: center;
   align-items: center;
 }
-.carousel-item img {
-  height: 200px;
-  margin: 0 2rem;
-}
-.carousel-main {
-  margin-top: 5rem;
-  padding: 0 5rem;
-  border: 1px solid red;
-}
-.carousel-button {
-  width: 50px;
-}
-.carousel-icon {
-  background-color: #00a9ff;
-  border-radius: 10px;
+
+@media screen and (max-width:991px) {
+  .reservation-list {
+    height: 300px;
+  }
+  .perf-item {
+    align-items: center;
+  }
+  .perf-info {
+    align-items: center;
+  }
 }
 
-@media screen and (max-width:1279px) {
-  .carousel-main {
-    height: 200px;
-  }
-  .carousel-item img {
-    margin: 0 1rem;
-  }
-}
-@media screen and (max-width:991px) {
-  .carousel-item img {
-    margin: 0 5px;
-  }
-}
 @media screen and (max-width:767px) {
   .profile-img {
     margin-bottom: 5rem;
     margin-left: 9.5rem;
   }
-  .carousel-item img {
-    margin: 0 0;
+  .reservation-area {
+    margin-bottom: 1rem;
+  }
+  .reservation-list {
+    flex-direction: column;
+    height: 1500px;
+  }
+  .reservation-list img {
+    margin-top: 3rem;
   }
 }

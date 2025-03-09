@@ -1,28 +1,16 @@
-import {
-  getLikeButton,
-  getBookButton,
-  perfStates,
-  likeToggle,
-  bookToggle,
-  getLikedPerformances,
-  getBookedPerformances,
-} from "./detail.js";
-
 const profileItem = document.querySelectorAll(".profile-item");
 const profileInfo = document.querySelectorAll(".profile-info div");
 const pencilIcon = document.querySelectorAll(".profile i");
 const profileIMG = document.querySelector(".profile-img");
 const inputFile = document.getElementById("input-file");
-const carouselInner = document.querySelector(".carousel-inner");
-const reservationList = document.querySelector(".reservation-list");
-const likedList = document.querySelector(".liked-list");
-const carouselItem = document.querySelectorAll(".carousel-item img");
+const reservationList = document.querySelectorAll(".reservation-list img");
+const perfInfo = document.querySelectorAll(".perf-info");
 const apiKey = "d98d9402f26042ed994300072acd892e";
 let perfAddress = "";
 let perfName = "";
+let perfPlace = "";
 let perfStart = "";
 let perfEnd = "";
-let perfPlace = "";
 const myProfile = {
   // 프로필 객체
   name: "코알누",
@@ -90,11 +78,43 @@ const getPerfInfo = async (perfID) => {
   const text = await response.text();
   const xml = new DOMParser().parseFromString(text, "application/xml");
   const perfDB = xml.getElementsByTagName("db")[0];
+
+  if (!perfDB) {
+    console.error("perfDB 데이터가 존재하지 않습니다.");
+    return;
+  }
+
   perfAddress = perfDB.getElementsByTagName("poster")[0].textContent;
   perfName = perfDB.getElementsByTagName("prfnm")[0].textContent;
   perfPlace = perfDB.getElementsByTagName("fcltynm")[0].textContent;
   perfStart = perfDB.getElementsByTagName("prfpdfrom")[0].textContent;
   perfEnd = perfDB.getElementsByTagName("prfpdto")[0].textContent;
+
+  reservationList[0].src = perfAddress;
+  reservationList[1].src = perfAddress;
+  reservationList[2].src = perfAddress;
+  reservationList[3].src = perfAddress;
+  perfInfo[0].innerHTML = `
+  <h6>${perfName}</h6>
+  <p>${perfPlace}</p>
+  <p>${perfStart} ~ ${perfEnd}</p>
+  `;
+  perfInfo[1].innerHTML = `
+  <h6>${perfName}</h6>
+  <p>${perfPlace}</p>
+  <p>${perfStart} ~ ${perfEnd}</p>
+  `;
+  perfInfo[2].innerHTML = `
+  <h6>${perfName}</h6>
+  <p>${perfPlace}</p>
+  <p>${perfStart} ~ ${perfEnd}</p>
+  `;
+  perfInfo[3].innerHTML = `
+  <h6>${perfName}</h6>
+  <p>${perfPlace}</p>
+  <p>${perfStart} ~ ${perfEnd}</p>
+  `;
+  
 };
 
 // 공통된 유효성 체크 항목
@@ -275,101 +295,4 @@ profileIMG.style.backgroundImage = `url(${window.localStorage.getItem(
   "imgAddress"
 )})`;
 
-// 예매한 공연 포스터 불러와서 캐러셀에 추가하는 함수
-const loadBookedPosters = async () => {
-  const bookedPerformances = await getBookedPerformances(); // 예매 목록 가져오기
-
-  if (bookedPerformances.length === 0) {
-    reservationList.innerHTML = `예매 내역이 없습니다`;
-    return;
-  }
-
-  let posters = [];
-  for (const perfID of bookedPerformances) {
-    await getPerfInfo(perfID); // perfAddress 값을 업데이트
-    posters.push(perfAddress);
-  }
-
-  // 캐러셀 아이템을 동적으로 추가
-  let carouselHTML = `
-    <div id="carouselExample" class="carousel slide carousel-main">
-      <div class="carousel-inner">
-  `;
-
-  for (let i = 0; i < posters.length; i += 4) {
-    const fourPosters = posters.slice(i, i + 4);
-    const activeClass = i === 0 ? "active" : "";
-
-    carouselHTML += `
-      <div class="carousel-item ${activeClass}">
-        ${fourPosters.map((poster) => `<img src="${poster}">`).join("")}
-      </div>
-    `;
-  }
-
-  carouselHTML += `
-      </div>
-      <button class="carousel-control-prev carousel-button" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon carousel-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-      </button>
-      <button class="carousel-control-next carousel-button" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-        <span class="carousel-control-next-icon carousel-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-      </button>
-    </div>
-  `;
-
-  reservationList.innerHTML = carouselHTML;
-};
-
-// 찜한 공연 포스터 불러와서 캐러셀에 추가하는 함수
-const loadLikedPosters = async () => {
-  const likedPerformances = await getLikedPerformances(); // 찜한 목록 가져오기
-
-  if (likedPerformances.length === 0) {
-    likedList.innerHTML = `찜한 내역이 없습니다`;
-    return;
-  }
-
-  let posters = [];
-  for (const perfID of likedPerformances) {
-    await getPerfInfo(perfID); // perfAddress 값을 업데이트
-    posters.push(perfAddress);
-  }
-
-  // 캐러셀 아이템을 동적으로 추가
-  let carouselHTML = `
-    <div id="carouselLikedExample" class="carousel slide carousel-main">
-      <div class="carousel-inner">
-  `;
-
-  for (let i = 0; i < posters.length; i += 4) {
-    const fourPosters = posters.slice(i, i + 4);
-    const activeClass = i === 0 ? "active" : "";
-
-    carouselHTML += `
-      <div class="carousel-item ${activeClass}">
-        ${fourPosters.map((poster) => `<img src="${poster}">`).join("")}
-      </div>
-    `;
-  }
-
-  carouselHTML += `
-      </div>
-      <button class="carousel-control-prev carousel-button" type="button" data-bs-target="#carouselLikedExample" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon carousel-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-      </button>
-      <button class="carousel-control-next carousel-button" type="button" data-bs-target="#carouselLikedExample" data-bs-slide="next">
-        <span class="carousel-control-next-icon carousel-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-      </button>
-    </div>
-  `;
-
-  likedList.innerHTML = carouselHTML;
-};
-
-loadBookedPosters();
-loadLikedPosters();
+getPerfInfo("PF260542");

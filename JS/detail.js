@@ -126,20 +126,16 @@ const getPerfDetail = async () => {
     const url = new URL(
       `http://www.kopis.or.kr/openApi/restful/pblprfr/${perfID}?service=${apiKey}`
     );
-
     const response = await fetch(proxy + url);
     if (!response.ok) {
       throw new Error(`HTTP 오류: ${response.status}`);
     }
-
     let text = await response.text();
     const xml = new DOMParser().parseFromString(text, "application/xml");
-
     const perfDB = xml.getElementsByTagName("db")[0];
     if (!perfDB) {
       throw new Error(`데이터를 찾을 수 없습니다.`);
     }
-
     //공연상세정보를 객체에 담아서 배열에 넣기
     perfInfo = [
       {
@@ -172,13 +168,15 @@ const getPerfDetail = async () => {
     console.error("오류 발생:", error.message);
     renderError(error.message);
   }
-
   renderDetail();
   // Apply UI states after performance info is loaded and rendered
   setTimeout(() => {
     applyUIStates();
   }, 100);
 };
+document.addEventListener("DOMContentLoaded", () => {
+  getPerfDetail();
+});
 
 //지도 api 호츌
 const getMapInfo = async () => {
@@ -449,10 +447,13 @@ const getBookedPerformances = () => perfStates.filter((perf) => perf.isBooked);
 
 //에러 화면 표시
 const renderError = (errorMessage) => {
-  document.querySelector(
-    "#perf-detail"
-  ).innerHTML = `<div class="alert alert-light" role="alert" style="text-align: center;">
-  ${errorMessage}</div>`;
+  const errorElement = document.querySelector("#perf-detail");
+  if (errorElement) {
+    errorElement.innerHTML = <div class="alert alert-light" role="alert" style="text-align: center;">
+  ${errorMessage}</div>;
+  } else {
+    console.error("Error element not found");
+  }
 };
 
 const renderMapError = (errorMessage) => {
