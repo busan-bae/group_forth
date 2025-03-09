@@ -108,9 +108,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // 사이드 메뉴 열기/닫기
 const openNav = () => {
-    document.getElementById("mySidenav").style.width = "100%";
+    document.getElementById("mySidenav").style.display = "block";
 };
 
 const closeNav = () => {
-    document.getElementById("mySidenav").style.width = "0";
+    document.getElementById("mySidenav").style.display = "none";
 };
