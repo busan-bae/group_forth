@@ -1,7 +1,11 @@
 import {
+  getLikeButton,
+  getBookButton,
   perfStates,
-  getBookedPerformances,
+  likeToggle,
+  bookToggle,
   getLikedPerformances,
+  getBookedPerformances,
 } from "./detail.js";
 
 const profileItem = document.querySelectorAll(".profile-item");
@@ -12,8 +16,13 @@ const inputFile = document.getElementById("input-file");
 const carouselInner = document.querySelector(".carousel-inner");
 const reservationList = document.querySelector(".reservation-list");
 const likedList = document.querySelector(".liked-list");
+const carouselItem = document.querySelectorAll(".carousel-item img");
 const apiKey = "d98d9402f26042ed994300072acd892e";
 let perfAddress = "";
+let perfName = "";
+let perfStart = "";
+let perfEnd = "";
+let perfPlace = "";
 const myProfile = {
   // 프로필 객체
   name: "코알누",
@@ -24,7 +33,7 @@ const myProfile = {
 let isEditable = [false, false, false, false]; // 각 항목별 편집 활성화 여부 체크용 배열
 
 // 프로필 이미지 주소값
-export let imgRoot =
+let imgRoot =
   "https://static.vecteezy.com/system/resources/thumbnails/013/360/247/small/default-avatar-photo-icon-social-media-profile-sign-symbol-vector.jpg";
 
 // 연필 버튼 클릭 이벤트
@@ -67,12 +76,12 @@ inputFile.addEventListener("change", () => {
   fReader.onloadend = (event) => {
     profileIMG.style.backgroundImage = `url(${event.target.result})`;
     imgRoot = event.target.result;
-    window.localStorage.setItem("imgAdress", imgRoot);
+    window.localStorage.setItem("imgAddress", event.target.result);
   };
 });
 
 const getPerfInfo = async (perfID) => {
-  // 매개변수로 받은 perfID 의 포스터 이미지 주소값을 가져오는 함수
+  // 매개변수로 받은 perfID 의 포스터 이미지 정보값을 가져오는 함수
   const proxy = "https://cors-anywhere.herokuapp.com/";
   const url = new URL(
     `http://kopis.or.kr/openApi/restful/pblprfr/${perfID}?service=${apiKey}`
@@ -82,6 +91,10 @@ const getPerfInfo = async (perfID) => {
   const xml = new DOMParser().parseFromString(text, "application/xml");
   const perfDB = xml.getElementsByTagName("db")[0];
   perfAddress = perfDB.getElementsByTagName("poster")[0].textContent;
+  perfName = perfDB.getElementsByTagName("prfnm")[0].textContent;
+  perfPlace = perfDB.getElementsByTagName("fcltynm")[0].textContent;
+  perfStart = perfDB.getElementsByTagName("prfpdfrom")[0].textContent;
+  perfEnd = perfDB.getElementsByTagName("prfpdto")[0].textContent;
 };
 
 // 공통된 유효성 체크 항목
@@ -230,10 +243,11 @@ if (window.localStorage.getItem("profile") === null) {
   // 로컬 스토리지가 비어있을 경우 (프로필 설정을 한번도 안한 경우)
   window.localStorage.setItem("profile", JSON.stringify(myProfile)); // 로컬 스토리지를 디폴트 값으로 저장
 }
-if (window.localStorage.getItem("imgAdress") === null) {
+if (window.localStorage.getItem("imgAddress") === null) {
   // 이미지 스토리지가 비어있을 경우
-  window.localStorage.setItem("imgAdress", imgRoot); // 이미지 스토리지를 디폴트 값으로 저장
+  window.localStorage.setItem("imgAddress", imgRoot); // 이미지 스토리지를 디폴트 값으로 저장
 }
+export let exportImg = window.localStorage.getItem("imgAddress"); // 프로필 이미지 주소값 export
 
 for (let i = 0; i <= 3; i++) {
   // 로컬 스토리지에 저장되어있는 객체를 가져와서 프로필에 렌더
@@ -255,16 +269,18 @@ for (let i = 0; i <= 3; i++) {
     ).email;
   }
 }
+
+// 프로필 이미지 렌더
 profileIMG.style.backgroundImage = `url(${window.localStorage.getItem(
-  "imgAdress"
-)})`; // 프로필 이미지 렌더
+  "imgAddress"
+)})`;
 
 // 예매한 공연 포스터 불러와서 캐러셀에 추가하는 함수
 const loadBookedPosters = async () => {
   const bookedPerformances = await getBookedPerformances(); // 예매 목록 가져오기
 
   if (bookedPerformances.length === 0) {
-    reservationList.innerHTML = `예매 내용이 없습니다`;
+    reservationList.innerHTML = `예매 내역이 없습니다`;
     return;
   }
 

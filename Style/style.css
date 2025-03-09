@@ -4,18 +4,30 @@ img{width: 100%;}
 /* 공통 list */
 .list-txt{padding:10px 0;}
 /* .list-item{width: 20%;} */
-.list-img{width: 100%;height: 370px;background: #ddd; position: relative;overflow:hidden;}
-.list-img img{position: absolute;height: 100%;top: 50%; left: 50%;transform: translate(-50%, -50%);}
+.list-img{width: 100%;height: 370px;background: #ddd; position: relative;overflow:hidden; }
+.list-img:hover img {transform: scale(1.2);object-fit:cover; }
+.list-img img{position: absolute;height: 100%;transition: transform 0.3s ease-in-out;transform-origin: center center;object-fit:cover; }
 .list-item .tit{font-weight:bold;}
 .list-item .place{font-size:14px;}
 .list-item .date{font-size:14px; color:#aaa;}
 .list-txt p{line-height: 22px;}
 .tit-bx button{border:none; background: transparent;}
 
+.swiper-slide a{display: block; width: 100%; height: 100%;}
+
 /*메인슬라이드*/
-.mainsl-wrap{background:#eee; padding:50px 0;}
+.mainsl-wrap{background-color: rgba(212, 235, 255, 0.5);  padding:50px 0; position: relative;}
+.mainsl-wrap:after{ content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: url('../img/msl-bg.png');
+    position: absolute;
+    opacity: 0.8; /* 배경 이미지 투명도 설정 */
+    z-index: -1}
 .mainsl{position: relative; width: 33.33%;}
-.mainsl-img{width: 100%;height: 300px;background:#ddd;margin: 0 auto;}
+.mainsl-img{width: 100%;height: 300px;background:#ddd;margin: 0 auto;overflow:hidden;}
+.mainsl-img:hover img {transform: scale(1.2);object-fit:cover; }
+.mainsl-img img {transition:transform 0.3s ease-in-out;transform-origin: center center;object-fit:cover; }
 .mainsl-img:after {content: "";clear: both;display: block;width: 100%;height: 100%;
 background: rgba(0,0,0,0.5);position: absolute;top: 0;margin: 0 auto;}
 .mainsl-txt{position:absolute;bottom:20px; left:20px; color:#fff;}

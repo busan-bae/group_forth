@@ -11,13 +11,66 @@ let bookButton = document.querySelector(".book");
 const detailImage = document.querySelector("#detail-image");
 const mapInfo = document.querySelector("#map");
 const venueInfo = document.querySelector(".venue-info");
+const venueDetail = document.querySelector(".venue-detail");
 
 let perfInfo = [];
 let mapArray = [];
 let mapObject = {};
 let perfStates = [];
 
+// Function to save perfStates to localStorage
+const savePerfStates = () => {
+  localStorage.setItem("perfStates", JSON.stringify(perfStates));
+};
+
+// Function to load perfStates from localStorage
+const loadPerfStates = () => {
+  const savedStates = localStorage.getItem("perfStates");
+  if (savedStates) {
+    perfStates = JSON.parse(savedStates);
+  }
+};
+
+// Apply UI states based on saved data
+const applyUIStates = () => {
+  if (!perfID) return;
+
+  const stateIndex = perfStates.findIndex((perf) => perf.perfID === perfID);
+  if (stateIndex === -1) return;
+
+  const state = perfStates[stateIndex];
+
+  // Apply like button state
+  const heartButton = getLikeButton();
+  if (heartButton) {
+    if (state.isLiked) {
+      heartButton.classList.remove("fa-regular");
+      heartButton.classList.add("fa-solid");
+      heartButton.style.color = "red";
+    } else {
+      heartButton.classList.remove("fa-solid");
+      heartButton.classList.add("fa-regular");
+      heartButton.style.color = "";
+    }
+  }
+
+  // Apply book button state
+  const reserveButton = getBookButton();
+  if (reserveButton) {
+    if (state.isBooked) {
+      reserveButton.classList.add("is-complete");
+      reserveButton.innerText = "예매 완료";
+    } else {
+      reserveButton.classList.remove("is-complete");
+      reserveButton.innerText = "예매하기";
+    }
+  }
+};
+
 document.addEventListener("DOMContentLoaded", () => {
+  // Load saved states first
+  loadPerfStates();
+
   likeButton = document.querySelector(".fa-heart");
   bookButton = document.querySelector(".book");
 
@@ -28,6 +81,11 @@ document.addEventListener("DOMContentLoaded", () => {
   if (bookButton) {
     bookButton.addEventListener("click", (event) => bookToggle(event));
   }
+
+  // Apply UI states after the DOM is fully loaded and buttons are available
+  setTimeout(() => {
+    applyUIStates();
+  }, 100);
 });
 
 function getLikeButton() {
@@ -116,6 +174,10 @@ const getPerfDetail = async () => {
   }
 
   renderDetail();
+  // Apply UI states after performance info is loaded and rendered
+  setTimeout(() => {
+    applyUIStates();
+  }, 100);
 };
 
 //지도 api 호츌
@@ -138,9 +200,10 @@ const getMapInfo = async () => {
 
     const data = await response.json();
     mapObject = data.meta.same_name;
-    console.log(mapObject);
+    // console.log(mapObject);
   } catch (error) {
     console.error("API 오류 발생:", error);
+    renderMapError(error);
   }
 
   renderMap();
@@ -148,57 +211,78 @@ const getMapInfo = async () => {
 
 //지도 렌더
 const renderMap = async () => {
-  //키워드 검색결과로 다시 호출해서 좌표값 받아오기
-  const url = new URL("https://dapi.kakao.com/v2/local/search/keyword.json");
-  url.searchParams.append("query", `${mapObject.selected_region}`);
-  try {
-    const response = await fetch(url, {
-      method: "GET",
-      headers: {
-        Authorization: `KakaoAK ${restApiKey}`,
-        "Content-Type": "application/json",
-      },
-    });
+  const fetchMapData = async (query) => {
+    const url = new URL("https://dapi.kakao.com/v2/local/search/keyword.json");
+    url.searchParams.append("query", query);
 
-    if (!response.ok) {
-      throw new Error(`HTTP 오류: ${response.status}`);
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          Authorization: `KakaoAK ${restApiKey}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP 오류: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data.documents;
+    } catch (error) {
+      console.error("API 오류 발생:", error);
+      renderMapError(error.message);
     }
+  };
 
-    const data = await response.json();
-    mapArray = data.documents;
-    console.log(mapArray);
-    const xAxis = Number(mapArray[0].x);
-    const yAxis = Number(mapArray[0].y);
-    // console.log(xAxis, yAxis);
+  // 1. selected_region으로 먼저 검색
+  let mapArray = await fetchMapData(mapObject.selected_region);
 
-    var container = document.getElementById("map"); //지도를 담을 영역의 DOM 레퍼런스
-
-    var options = {
-      //지도를 생성할 때 필요한 기본 옵션
-      center: new kakao.maps.LatLng(yAxis, xAxis), //지도의 중심좌표.
-      level: 3, //지도의 레벨(확대, 축소 정도)
-    };
-
-    var map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
-
-    // 마커가 표시될 위치입니다
-    var markerPosition = new kakao.maps.LatLng(yAxis, xAxis);
-
-    // 마커를 생성합니다
-    var marker = new kakao.maps.Marker({
-      position: markerPosition,
-    });
-
-    // 마커가 지도 위에 표시되도록 설정합니다
-    marker.setMap(map);
-
-    //공연장 정보 텍스트
-    const mapInfoHTML = `<div>${mapArray[0].place_name}</div><div>전화번호 : ${mapArray[0].phone}</div><div>주소 : ${mapArray[0].road_address_name}</div>`;
-    venueInfo.innerHTML = mapInfoHTML;
-  } catch (error) {
-    console.error("API 오류 발생:", error);
-    renderMapError(error.message);
+  // 2. 결과가 없으면 keyword로 검색
+  if (mapArray.length === 0 && mapObject.keyword) {
+    console.log(
+      `"${mapObject.selected_region}" 검색 결과가 없어서 "${mapObject.keyword}"로 재검색합니다.`
+    );
+    mapArray = await fetchMapData(mapObject.keyword);
   }
+
+  if (mapArray.length === 0) {
+    console.error("검색 결과가 없습니다.");
+    renderMapError("검색 결과가 없습니다.");
+    return;
+  }
+
+  // console.log(mapArray);
+
+  const xAxis = Number(mapArray[0].x);
+  const yAxis = Number(mapArray[0].y);
+
+  var container = document.getElementById("map");
+  //지도를 생성할 때 필요한 기본 옵션
+  var options = {
+    center: new kakao.maps.LatLng(yAxis, xAxis), //지도의 중심좌표.
+    level: 3, //지도의 레벨(확대, 축소 정도)
+  };
+
+  var map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
+
+  // 마커가 표시될 위치입니다
+  var markerPosition = new kakao.maps.LatLng(yAxis, xAxis);
+
+  // 마커를 생성합니다
+  var marker = new kakao.maps.Marker({
+    position: markerPosition,
+  });
+
+  //마커가 지도 위에 표시되도록 설정합니다
+  marker.setMap(map);
+
+  // 공연장 정보 표시
+  const mapInfoHTML = `<div>${mapArray[0].place_name}</div>
+    <div>전화번호 : ${mapArray[0].phone}</div>
+    <div>주소 : ${mapArray[0].road_address_name}</div>`;
+  venueInfo.innerHTML = mapInfoHTML;
 };
 
 //공연 상세정보 화면에 보여주기
@@ -274,13 +358,13 @@ const filter = (event) => {
   const tab = event.target.textContent;
   if (tab === "공연 소개") {
     detailImage.style.display = "block";
+    venueDetail.style.display = "none";
     mapInfo.style.display = "none";
-    venueInfo.style.display = "none";
     getPerfDetail();
   } else if (tab === "공연 장소") {
     detailImage.style.display = "none";
+    venueDetail.style.display = "block";
     mapInfo.style.display = "block";
-    venueInfo.style.display = "block";
     getMapInfo();
   }
 };
@@ -311,6 +395,9 @@ const updatePerfState = (id, key, value) => {
       isBooked: key === "isBooked" ? value : false,
     });
   }
+
+  // Save to localStorage after updating the state
+  savePerfStates();
 };
 
 //공연 찜하기 기능
@@ -369,17 +456,15 @@ const renderError = (errorMessage) => {
 };
 
 const renderMapError = (errorMessage) => {
-  document.querySelector(
-    ".detail-body-contents"
-  ).innerHTML = `<div class="alert alert-light" role="alert" style="text-align: center;">
+  venueDetail.innerHTML = `<div class="alert alert-light" role="alert" style="text-align: center;">
   ${errorMessage}</div>`;
 };
 
+// Load saved states when the script runs
+loadPerfStates();
 getPerfDetail();
 
 export {
-  getLikeButton,
-  getBookButton,
   perfStates,
   likeToggle,
   bookToggle,

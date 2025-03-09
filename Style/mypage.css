@@ -4,6 +4,14 @@
   font-weight: 400;
   font-style: normal;
 }
+.my-header {
+  border: 3px solid red;
+  height: 70px;
+}
+.my-footer {
+  border: 3px solid red;
+  height: 100px;
+}
 
 .profile-area {
   display: flex;
@@ -25,7 +33,6 @@
   border-radius: 100%;
   width: 150px;
   height: 150px;
-  margin-top: 1.5rem;
   margin-right: 10rem;
   background-image: url("https://static.vecteezy.com/system/resources/thumbnails/013/360/247/small/default-avatar-photo-icon-social-media-profile-sign-symbol-vector.jpg");
   background-position: center;
@@ -77,6 +84,7 @@
   font-weight: 500;
   white-space: nowrap;
   overflow: hidden;
+  padding-bottom: 0.5rem;
 }
 .profile i {
   position: absolute;
@@ -123,7 +131,7 @@
 .carousel-main {
   margin-top: 5rem;
   padding: 0 5rem;
-  display: flex;
+  border: 1px solid red;
 }
 .carousel-button {
   width: 50px;
