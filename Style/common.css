@@ -321,10 +321,10 @@ body {line-height: 1; color: #000;}
         font-size: 22px;
     }
     .side-menu {
-        display: block;
+        display: none;
         height: 100%;
-        width: 0;
-        position: fixed;
+        width: 100%;
+        position: absolute;
         z-index: 1;
         top: 0;
         right: 0;
