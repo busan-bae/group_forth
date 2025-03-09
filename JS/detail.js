@@ -241,9 +241,9 @@ const renderMap = async () => {
 
   // 2. 결과가 없으면 keyword로 검색
   if (mapArray.length === 0 && mapObject.keyword) {
-    console.log(
-      `"${mapObject.selected_region}" 검색 결과가 없어서 "${mapObject.keyword}"로 재검색합니다.`
-    );
+    // console.log(
+    //   `"${mapObject.selected_region}" 검색 결과가 없어서 "${mapObject.keyword}"로 재검색합니다.`
+    // );
     mapArray = await fetchMapData(mapObject.keyword);
   }
 
@@ -420,7 +420,7 @@ const likeToggle = (event) => {
     updatePerfState(id, "isLiked", false);
   }
 
-  console.log(perfStates);
+  // console.log(perfStates);
 };
 
 //예매하기
@@ -440,7 +440,7 @@ const bookToggle = (event) => {
     updatePerfState(id, "isBooked", false);
   }
 
-  console.log(perfStates);
+  // console.log(perfStates);
 };
 
 //찜한 공연 및 예매된 공연 필터링
