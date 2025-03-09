@@ -1,5 +1,5 @@
 *{margin:0;padding:0;font:inherit;color:inherit;}
-a {text-decoration:none}
+a {text-decoration:none; color:#000;}
 ul{list-style: none;}
 img, svg {display: block;max-width:100%;}
 button {background:none;border:0;cursor:pointer;}
@@ -69,7 +69,6 @@ body {line-height: 1; color: #000;}
 .side-menu{
     display: none;
 }
-
 /* search */
 .search-wrap{
     display: none; 
@@ -78,7 +77,6 @@ body {line-height: 1; color: #000;}
     right: 0;
     width: 100%;
     height: 100%;
-    background: #ddd;
     background: #fff;
     z-index: 100;
     flex-direction: column;
@@ -89,7 +87,6 @@ body {line-height: 1; color: #000;}
     width: 100%;
     height: 100%;
     max-width: 1440px;
-    /* background-color: #f00; */
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -104,6 +101,7 @@ body {line-height: 1; color: #000;}
     width: 100%;
     height: 40px;
     border-radius: 20px;
+    padding-left: 20px;
 }
 .search-wrap .search-group .click-btn i{
     position: absolute;
@@ -129,7 +127,6 @@ body {line-height: 1; color: #000;}
     margin: 5px 0;
     border-radius: 5px;
 }
-
 .delete-btn {
     background: none;
     border: none;
@@ -154,7 +151,6 @@ body {line-height: 1; color: #000;}
     justify-content: center;
     padding-bottom: 40px;
 }
-
 .footer-inner {
     max-width: 1440px;
     width: 100%;
@@ -198,7 +194,6 @@ body {line-height: 1; color: #000;}
     display: flex;
     gap: 15px;
 }
-
 .footer .sns-area li a {
     font-size: 24px;
     color: #333;
@@ -273,18 +268,15 @@ body {line-height: 1; color: #000;}
     line-height: 1.5;
     word-break: keep-all;
 }
-
 .footer .footer-bottom .inquiry-area .notice-area a {
     color: #0073e6;
     text-decoration: underline;
 }
-
-
 @media (max-width: 767px){
     .header {height: 64px;}
-    .header .logo {}
     .header .logo a{
-        flex: inherit; width: 120px;
+        display: block;
+        width: 120px;
     }
     .header .header-inner {padding: 20px;}
     .header .gnb {display: none;}
@@ -328,7 +320,6 @@ body {line-height: 1; color: #000;}
         height: 40px;
         font-size: 22px;
     }
-
     .side-menu {
         display: block;
         height: 100%;
@@ -338,15 +329,15 @@ body {line-height: 1; color: #000;}
         top: 0;
         right: 0;
         background: #fff;
-        overflow-x: hidden;
         transition: 0.5s;
-      }
-
-      .side-menu .menu-logo {
-      
+        overflow: hidden;
       }
       .side-menu .side-inner{
+        position: absolute; 
+        width: 100%;
+        height: 100%;
         padding: 20px;
+        box-sizing: border-box;
       }
       .side-menu .side-inner h2 a{
         display: block;
@@ -355,8 +346,6 @@ body {line-height: 1; color: #000;}
       .side-menu .side-inner .side-menu-list {
         display: flex;
         flex-direction: column;
-        /* margin-top: 30px; */
-      
       }
       .side-menu .side-inner .side-menu-list ul{
         padding: 20px 0;
@@ -364,7 +353,6 @@ body {line-height: 1; color: #000;}
       }
       .side-menu .side-inner .side-menu-list li + li{
         margin-top: 30px;
-        /* padding: 10px; */
       }
       .side-menu-list button {
         margin: 5px;
@@ -372,25 +360,16 @@ body {line-height: 1; color: #000;}
         background: none;
         width: 120px;
       }
-      
-      .side-menu .close-btn {
+      .side-menu .side-close {
         position: absolute;
         top: 20px;
         right: 20px;
         font-size: 30px;
       }
-      
-   
-      
       .side-menu-list button:hover {
         background-color: beige;
         border-radius: 3px;
       }
-}
-
-
-
-@media (max-width: 767px) {
     .footer .footer-inner{
         display: flex;
         padding-bottom: 20px;
@@ -408,7 +387,6 @@ body {line-height: 1; color: #000;}
         flex-wrap: wrap;
         justify-content: center; 
     }
-
     .footer .footer-top .nav-area li{}
     .footer .nav-area li a {
         height: 30px;
@@ -425,39 +403,29 @@ body {line-height: 1; color: #000;}
         align-items: flex-start;
         padding: 20px;
     }
-
-    .footer .footer-bottom .logo-area {
-    }
-
     .footer .footer-bottom .flex {
         flex-direction: column;
         align-items: flex-start;
     }
-
     .footer .footer-bottom .wrap {
         width: 100%;
         margin-top: 20px;
     }
-
     .footer .footer-bottom .inquiry-area {
         width: 100%;
         margin-left: 0;
         margin-top: 20px;
     }
-
     .footer .footer-bottom .inquiry-area .title {
         font-size: 16px;
     }
-
     .footer .footer-bottom .inquiry-area ul {
         flex-direction: column;
         gap: 5px;
     }
-
     .footer .footer-bottom .inquiry-area li {
         margin-right: 0;
     }
-
     .footer .footer-bottom .inquiry-area .notice-area {
         font-size: 12px;
     }

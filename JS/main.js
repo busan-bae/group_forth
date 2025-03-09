@@ -51,27 +51,27 @@ const fetchKopisData = async (queryParams, containerClass) => {
       const xml = new DOMParser().parseFromString(xmlText, "application/xml");
       const jsonData = xmlToJson(xml);
 
-      console.log("API 요청 URL:", apiURL);
-      console.log("JSON 데이터:", jsonData);
+      //console.log("API 요청 URL:", apiURL);
+      //console.log("JSON 데이터:", jsonData);
 
-      let performances = [];
+      let performanceList = [];
 
 // 데이터 구조에 맞게 배열 추출
 if (jsonData.boxofs && jsonData.boxofs.boxof) {
   // boxofs.boxof이 배열인지 확인하고, 배열로 처리
-  performances = Array.isArray(jsonData.boxofs.boxof) ? jsonData.boxofs.boxof : [jsonData.boxofs.boxof];
+  performanceList = Array.isArray(jsonData.boxofs.boxof) ? jsonData.boxofs.boxof : [jsonData.boxofs.boxof];
 } else if (jsonData.dbs && jsonData.dbs.db) {
   // dbs.db이 배열인지 확인하고, 배열로 처리
-  performances = Array.isArray(jsonData.dbs.db) ? jsonData.dbs.db : [jsonData.dbs.db];
+  performanceList = Array.isArray(jsonData.dbs.db) ? jsonData.dbs.db : [jsonData.dbs.db];
 } else {
   console.error("데이터가 잘못되었습니다. boxofs.boxof 또는 dbs.db가 없습니다.");
 }
 
-    console.log("JSON 데이터에서 추출된 performances:", performances);
-    render(performances, containerClass);
+   //console.log("JSON 데이터에서 추출된 performances:", performanceList);
+    render(performanceList, containerClass);
 
-      console.log("JSON 데이터에서 추출된 performances:", performances);
-      render(performances, containerClass);
+      //console.log("JSON 데이터에서 추출된 performances:", performanceList);
+      render(performanceList, containerClass);
 
   } catch (error) {
       console.error("API 요청 중 오류 발생:", error);
@@ -136,7 +136,7 @@ const addDate = () => {
     let dateHTML = "";
 
     // 날짜 버튼 생성
-    for (let i = 0; i < 25; i++) {
+    for (let i = 0; i < 20; i++) {
         // currentDate의 날짜를 증가시키기 위해
         currentDate.setDate(todayDate.getDate() + i); // 오늘 날짜에 i일을 더함
 
@@ -250,6 +250,7 @@ function initSwipers() {
         pagination: { el: ".swiper-pagination", clickable: true },
         observer: true, observeParents: true,
         watchOverflow: true, 
+        autoplay:false,
         breakpoints: { 768: { slidesPerView: 7 }, 1024: { slidesPerView: 12 } }
     });
 
@@ -261,7 +262,7 @@ function initSwipers() {
 
         if (mainslSwiper?.autoplay) mainslSwiper.autoplay.start();
         if (mainCont1Swiper?.autoplay) mainCont1Swiper.autoplay.start();
-        if (mdateSwiper?.autoplay) mdateSwiper.autoplay.start();
+        //if (mdateSwiper?.autoplay) mdateSwiper.autoplay.start();
     }, 100);
 }
 
@@ -272,9 +273,3 @@ window.onload = () => {
       initSwipers();
     }, 100);
   };
-
-
-
-// import { likeToggle } from './detail.js';
-
-// likeToggle();
