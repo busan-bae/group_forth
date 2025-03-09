@@ -6,6 +6,7 @@ const regionFilter = document.querySelector(".region-filter")
 const sortFilter = document.querySelector(".filter");
 const playFilter = document.querySelector(".play-filter")
 
+
 sortFilter.addEventListener("change", (event) => applySortFilter(event));
 regionFilter.addEventListener("change",(event)=>applyRegionFilter(event)) 
 playFilter.addEventListener("change", (event)=>applypplatfilter(event))
@@ -20,6 +21,12 @@ let filteredPerformances = [];
 let selectedRegion = "all"
 let selectedSort = "1"
 let prfstate = "02"
+let shcate = ""
+
+const titlefilter = () => {
+    const listTitle = document.querySelector(".list-title").getAttribute('value');
+    shcate = listTitle
+}
 
 
 // XML -> JSON 변환 함수
@@ -57,12 +64,13 @@ const xmlToJson = (xml) => {
 
 // 여러 페이지의 데이터를 가져와 합치는 함수
 const fetchAllPages = async () => {
+    titlefilter()
   try {
       let requests = [];
       allPerformances = []
       // 여러 페이지의 데이터를 요청
       for (let page = 1; page <= totalPages; page++) {
-          const apiURL = `${baseURL}pblprfr?stdate=20250307&eddate=20250406&cpage=${page}&rows=99&prfstate=${prfstate}&service=${apiKey}&shcate=GGGA`;
+          const apiURL = `${baseURL}pblprfr?stdate=20250307&eddate=20250406&cpage=${page}&rows=99&prfstate=${prfstate}&service=${apiKey}&shcate=${shcate}`;
           requests.push(fetch(proxy + encodeURIComponent(apiURL))
               .then(response => {
                   if (!response.ok) throw new Error(`HTTP 오류: ${response.status}`);
@@ -91,7 +99,6 @@ const fetchAllPages = async () => {
       selectedRegion = "all"; // "전지역" 초기화
       filteredPerformances = allPerformances; // "전지역"에 해당하는 모든 공연 데이터
       renderPage(currentPage); // 첫 페이지 렌더링
-
       console.log("✅ 모든 페이지에서 가져온 데이터:", allPerformances);
   } catch (error) {
       console.error("❌ API 요청 중 오류 발생:", error);
@@ -220,7 +227,7 @@ const renderPagination = () => {
 
     // 이전 버튼 생성
     const prevItem = document.createElement("li");
-    prevItem.className = `page-item ${currentPage === 1 ? "disabled" : ""}`;
+    prevItem.className = `arrow page-item ${currentPage === 1 ? "disabled" : ""}`;
     const prevLink = document.createElement("a");
     prevLink.className = "page-link";
     prevLink.href = "#";
@@ -253,7 +260,7 @@ const renderPagination = () => {
 
     // 다음 버튼 생성
     const nextItem = document.createElement("li");
-    nextItem.className = `page-item ${currentPage === totalPages ? "disabled" : ""}`;
+    nextItem.className = `arrow page-item ${currentPage === totalPages ? "disabled" : ""}`;
     const nextLink = document.createElement("a");
     nextLink.className = "page-link";
     nextLink.href = "#";
