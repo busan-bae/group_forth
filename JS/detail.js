@@ -16,72 +16,29 @@ const venueDetail = document.querySelector(".venue-detail");
 let perfInfo = [];
 let mapArray = [];
 let mapObject = {};
+let perfStates = [];
 
-// Create a state manager instead of a simple array
-const perfStateManager = {
-  states: [],
-
-  // Get all states
-  getAll() {
-    return this.states;
-  },
-
-  // Set all states
-  setAll(newStates) {
-    this.states = newStates;
-    return this.states;
-  },
-
-  // Get filtered states
-  getLiked() {
-    return this.states.filter((perf) => perf.isLiked);
-  },
-
-  getBooked() {
-    return this.states.filter((perf) => perf.isBooked);
-  },
-
-  // Update a specific state
-  update(id, key, value) {
-    const index = this.states.findIndex((perf) => perf.perfID === id);
-    if (index !== -1) {
-      this.states[index][key] = value;
-    } else {
-      this.states.push({
-        perfID: id,
-        isLiked: key === "isLiked" ? value : false,
-        isBooked: key === "isBooked" ? value : false,
-      });
-    }
-    // Save to localStorage after updating
-    this.save();
-    return this.states;
-  },
-
-  // Save to localStorage
-  save() {
-    localStorage.setItem("perfStates", JSON.stringify(this.states));
-  },
-
-  // Load from localStorage
-  load() {
-    const savedStates = localStorage.getItem("perfStates");
-    if (savedStates) {
-      this.states = JSON.parse(savedStates);
-    }
-    return this.states;
-  },
+// Function to save perfStates to localStorage
+const savePerfStates = () => {
+  localStorage.setItem("perfStates", JSON.stringify(perfStates));
 };
 
-// Load saved states at initialization
-perfStateManager.load();
+// Function to load perfStates from localStorage
+const loadPerfStates = () => {
+  const savedStates = localStorage.getItem("perfStates");
+  if (savedStates) {
+    perfStates = JSON.parse(savedStates);
+  }
+};
 
 // Apply UI states based on saved data
 const applyUIStates = () => {
   if (!perfID) return;
 
-  const state = perfStateManager.states.find((perf) => perf.perfID === perfID);
-  if (!state) return;
+  const stateIndex = perfStates.findIndex((perf) => perf.perfID === perfID);
+  if (stateIndex === -1) return;
+
+  const state = perfStates[stateIndex];
 
   // Apply like button state
   const heartButton = getLikeButton();
@@ -112,7 +69,7 @@ const applyUIStates = () => {
 
 document.addEventListener("DOMContentLoaded", () => {
   // Load saved states first
-  perfStateManager.load();
+  loadPerfStates();
 
   likeButton = document.querySelector(".fa-heart");
   bookButton = document.querySelector(".book");
@@ -427,8 +384,20 @@ const toggleTabs = (event) => {
 
 //찜 상태 및 예매상태 업데이트
 const updatePerfState = (id, key, value) => {
-  perfStateManager.update(id, key, value);
-  console.log(perfStateManager.getAll());
+  const index = perfStates.findIndex((perf) => perf.perfID === id); //배열에 있는지 확인
+  if (index !== -1) {
+    perfStates[index][key] = value; //기존 공연인 경우 상태 업데이트
+  } else {
+    perfStates.push({
+      //새 공연인 경우 배열에 push
+      perfID: id,
+      isLiked: key === "isLiked" ? value : false,
+      isBooked: key === "isBooked" ? value : false,
+    });
+  }
+
+  // Save to localStorage after updating the state
+  savePerfStates();
 };
 
 //공연 찜하기 기능
@@ -450,6 +419,8 @@ const likeToggle = (event) => {
     heart.style.color = ""; // 색상 초기화
     updatePerfState(id, "isLiked", false);
   }
+
+  console.log(perfStates);
 };
 
 //예매하기
@@ -468,11 +439,13 @@ const bookToggle = (event) => {
     button.innerText = "예매하기";
     updatePerfState(id, "isBooked", false);
   }
+
+  console.log(perfStates);
 };
 
 //찜한 공연 및 예매된 공연 필터링
-const getLikedPerformances = () => perfStateManager.getLiked();
-const getBookedPerformances = () => perfStateManager.getBooked();
+const getLikedPerformances = () => perfStates.filter((perf) => perf.isLiked);
+const getBookedPerformances = () => perfStates.filter((perf) => perf.isBooked);
 
 //에러 화면 표시
 const renderError = (errorMessage) => {
@@ -488,13 +461,11 @@ const renderMapError = (errorMessage) => {
 };
 
 // Load saved states when the script runs
-perfStateManager.load();
+loadPerfStates();
 getPerfDetail();
 
 export {
-  getLikeButton,
-  getBookButton,
-  perfStateManager, // Export the manager instead of the raw array
+  perfStates,
   likeToggle,
   bookToggle,
   getLikedPerformances,
