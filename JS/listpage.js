@@ -99,10 +99,10 @@ const fetchAllPages = async () => {
       selectedRegion = "all"; // "전지역" 초기화
       filteredPerformances = allPerformances; // "전지역"에 해당하는 모든 공연 데이터
       renderPage(currentPage); // 첫 페이지 렌더링
-      console.log("✅ 모든 페이지에서 가져온 데이터:", allPerformances);
+    //   console.log("✅ 모든 페이지에서 가져온 데이터:", allPerformances);
   } catch (error) {
     error()
-    console.error("❌ API 요청 중 오류 발생:", error);
+    // console.error("❌ API 요청 중 오류 발생:", error);
   }
 };
 
@@ -123,7 +123,7 @@ const regionRender = () => {
   // 중복을 제거한 지역만 뽑기
   const uniqueAreas = [...new Set(allPerformances.map((p) => p.area?.["#text"]))];
   
-  console.log("🎭 지역 목록:", uniqueAreas);
+//   console.log("🎭 지역 목록:", uniqueAreas);
 
   // "전지역"을 첫 번째 옵션으로 추가
   const regionHTML = [
@@ -140,7 +140,7 @@ const applyRegionFilter = (event) => {
     currentPage = 1
   selectedRegion = event.target.value; // 선택된 지역 값 가져오기
   
-  console.log("선택된 지역:", selectedRegion);
+//   console.log("선택된 지역:", selectedRegion);
 
   // 지역에 맞는 공연만 필터링
   filteredPerformances = selectedRegion === "all" 
@@ -188,7 +188,7 @@ const renderPage = (page) => {
   const start = (page - 1) * itemsPerPage;
   const end = start + itemsPerPage;
   const performancesToRender = filteredPerformances.slice(start, end);
-  console.log(performancesToRender)
+//   console.log(performancesToRender)
   const container = document.querySelector(".performance-list");
   container.innerHTML = performancesToRender.map(performance => `
       <div class="col">
@@ -200,7 +200,7 @@ const renderPage = (page) => {
                 <div class="tit-bx">
                         <div class="d-flex justify-content-between">
                             <p class="tit">${performance.prfnm['#text']}</p>
-                            <button class="like"><i class="fa-regular fa-heart"></i></button>
+                            <button><i class="fa-regular fa-heart"></i></button>
                         </div>
                         <p class="place">${performance.fcltynm['#text']}</p>
                     </div>
@@ -297,16 +297,106 @@ const changePage = (page) => {
 
     
   
-    // //하트 활성화 토글
-    // if (heart.classList.contains("fa-regular")) {
-    //   heart.classList.remove("fa-regular");
-    //   heart.classList.add("fa-solid");
-    //   heart.style.color = "red";
-    //   updatePerfState(id, "isLiked", true);
-    // } else {
-    //   heart.classList.remove("fa-solid");
-    //   heart.classList.add("fa-regular");
-    //   heart.style.color = ""; // 색상 초기화
-    //   updatePerfState(id, "isLiked", false);
-    // }
+// let likeButton = document.querySelector(".fa-heart");
+// let perfStates = [];
+
+// // Function to save perfStates to localStorage
+// const savePerfStates = () => {
+//   localStorage.setItem("perfStates", JSON.stringify(perfStates));
+// };
+
+// // Function to load perfStates from localStorage
+// const loadPerfStates = () => {
+//   const savedStates = localStorage.getItem("perfStates");
+//   if (savedStates) {
+//     perfStates = JSON.parse(savedStates);
+//   }
+// };
   
+// // Apply UI states based on saved data
+// const applyUIStates = () => {
+//     if (!perfID) return;
+  
+//     const stateIndex = perfStates.findIndex((perf) => perf.perfID === perfID);
+//     if (stateIndex === -1) return;
+  
+//     const state = perfStates[stateIndex];
+  
+//     // Apply like button state
+//     const heartButton = getLikeButton();
+//     if (heartButton) {
+//       if (state.isLiked) {
+//         heartButton.classList.remove("fa-regular");
+//         heartButton.classList.add("fa-solid");
+//         heartButton.style.color = "red";
+//       } else {
+//         heartButton.classList.remove("fa-solid");
+//         heartButton.classList.add("fa-regular");
+//         heartButton.style.color = "";
+//       }
+//     }
+//   };
+
+//   document.addEventListener("DOMContentLoaded", () => {
+//   // Load saved states first
+//   loadPerfStates();
+
+//   likeButton = document.querySelector(".fa-heart");
+//   bookButton = document.querySelector(".book");
+
+//   if (likeButton) {
+//     likeButton.addEventListener("click", (event) => likeToggle(event));
+//   }
+
+//   // Apply UI states after the DOM is fully loaded and buttons are available
+//   setTimeout(() => {
+//     applyUIStates();
+//   }, 100);
+// });
+
+// function getLikeButton() {
+//   return document.querySelector(".fa-heart");
+// }
+
+// //찜 상태 및 예매상태 업데이트
+// const updatePerfState = (id, key, value) => {
+//   const index = perfStates.findIndex((perf) => perf.perfID === id); //배열에 있는지 확인
+//   if (index !== -1) {
+//     perfStates[index][key] = value; //기존 공연인 경우 상태 업데이트
+//   } else {
+//     perfStates.push({
+//       //새 공연인 경우 배열에 push
+//       perfID: id,
+//       isLiked: key === "isLiked" ? value : false,
+//       isBooked: key === "isBooked" ? value : false,
+//     });
+//   }
+
+//   // Save to localStorage after updating the state
+//   savePerfStates();
+// };
+
+// //공연 찜하기 기능
+// const likeToggle = (event) => {
+//     const heart = event.target;
+//     const id = perfInfo[0]?.id;
+  
+//     if (!id) return;
+  
+//     //하트 활성화 토글
+//     if (heart.classList.contains("fa-regular")) {
+//       heart.classList.remove("fa-regular");
+//       heart.classList.add("fa-solid");
+//       heart.style.color = "red";
+//       updatePerfState(id, "isLiked", true);
+//     } else {
+//       heart.classList.remove("fa-solid");
+//       heart.classList.add("fa-regular");
+//       heart.style.color = ""; // 색상 초기화
+//       updatePerfState(id, "isLiked", false);
+//     }
+  
+//     console.log(perfStates);
+//   };
+
+//   loadPerfStates()
