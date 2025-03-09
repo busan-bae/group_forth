@@ -1,3 +1,7 @@
+//  import { exportImg } from './mypage.js';
+
+// console.log(exportImg);
+
 
 document.addEventListener("DOMContentLoaded", function () {
     // 사이드 메뉴 관련 이벤트
