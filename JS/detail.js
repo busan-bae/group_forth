@@ -13,7 +13,6 @@ const mapInfo = document.querySelector("#map");
 const venueInfo = document.querySelector(".venue-info");
 const venueDetail = document.querySelector(".venue-detail");
 
-console.log(perfID)
 
 let perfInfo = [];
 let mapArray = [];
@@ -466,10 +465,10 @@ const renderMapError = (errorMessage) => {
 loadPerfStates();
 getPerfDetail();
 
-// export {
-//   perfStates,
-//   likeToggle,
-//   bookToggle,
-//   getLikedPerformances,
-//   getBookedPerformances,
-// };
+export {
+  perfStates,
+  likeToggle,
+  bookToggle,
+  getLikedPerformances,
+  getBookedPerformances,
+};
