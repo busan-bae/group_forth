@@ -25,13 +25,13 @@
 
 .head-background {
     width: 100%;
-    /* background-image:url(https://image.yes24.com/goods/142231567/XL);
+    background-image:url(https://image.slidesdocs.com/responsive-images/background/color-nature-blue-sky-colorful-cloud-white-powerpoint-background_619de8f454__960_540.jpg);
     background-repeat: no-repeat;
-    background-size: cover; */
+    background-size: cover;
     text-align: center;
-    padding-top: 5em;
-    padding-bottom: 5em;
-    margin-bottom: 5px;
+    padding-top: 6em;
+    padding-bottom: 6em;
+    /* margin-bottom: 10px; */
  }
 
 .main-filter-bar {
@@ -150,14 +150,5 @@
     letter-spacing: 4px;
     border-radius: 5px;
 }
-/*  
-  .pagination a {
-    color: black;
-    float: left;
-    padding: 8px 16px;
-    text-decoration: none;
-  }
-
-  .pagination a.active {
-    background-color: #4CAF50;
-    color: white;} */
+a{text-decoration: none; color:#333;}
+img{width: 100%;}
