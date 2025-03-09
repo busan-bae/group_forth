@@ -51,8 +51,8 @@ const fetchKopisData = async (queryParams, containerClass) => {
       const xml = new DOMParser().parseFromString(xmlText, "application/xml");
       const jsonData = xmlToJson(xml);
 
-      console.log("API 요청 URL:", apiURL);
-      console.log("JSON 데이터:", jsonData);
+      //console.log("API 요청 URL:", apiURL);
+      //console.log("JSON 데이터:", jsonData);
 
       let performanceList = [];
 
@@ -67,10 +67,10 @@ if (jsonData.boxofs && jsonData.boxofs.boxof) {
   console.error("데이터가 잘못되었습니다. boxofs.boxof 또는 dbs.db가 없습니다.");
 }
 
-    console.log("JSON 데이터에서 추출된 performances:", performanceList);
+   //console.log("JSON 데이터에서 추출된 performances:", performanceList);
     render(performanceList, containerClass);
 
-      console.log("JSON 데이터에서 추출된 performances:", performanceList);
+      //console.log("JSON 데이터에서 추출된 performances:", performanceList);
       render(performanceList, containerClass);
 
   } catch (error) {
@@ -273,9 +273,3 @@ window.onload = () => {
       initSwipers();
     }, 100);
   };
-
-
-
-// import { likeToggle } from './detail.js';
-
-// likeToggle();
